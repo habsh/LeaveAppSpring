@@ -6,15 +6,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="Leave_History")
 public class Leave {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int leaveID;
 
-	private int emplID;
+	@ManyToOne
+	private Employee employee;
+	
 	private Date startDate;
 	private Date endDate;
 	private int numDays;
@@ -30,11 +35,12 @@ public class Leave {
 	public void setLeaveID(int leaveID) {
 		this.leaveID = leaveID;
 	}
-	public int getEmplID() {
-		return emplID;
+
+	public Employee getEmployee() {
+		return employee;
 	}
-	public void setEmplID(int emplID) {
-		this.emplID = emplID;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 	public Date getStartDate() {
 		return startDate;
@@ -89,7 +95,7 @@ public class Leave {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((appliedOn == null) ? 0 : appliedOn.hashCode());
-		result = prime * result + emplID;
+		result = prime * result + ((employee == null) ? 0 : employee.hashCode());
 		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
 		result = prime * result + leaveID;
 		result = prime * result + ((leaveStatus == null) ? 0 : leaveStatus.hashCode());
@@ -114,7 +120,10 @@ public class Leave {
 				return false;
 		} else if (!appliedOn.equals(other.appliedOn))
 			return false;
-		if (emplID != other.emplID)
+		if (employee == null) {
+			if (other.employee != null)
+				return false;
+		} else if (!employee.equals(other.employee))
 			return false;
 		if (endDate == null) {
 			if (other.endDate != null)
@@ -154,9 +163,10 @@ public class Leave {
 	}
 	@Override
 	public String toString() {
-		return "Leave [leaveID=" + leaveID + ", emplID=" + emplID + ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", numDays=" + numDays + ", leaveType=" + leaveType + ", reasons=" + reasons + ", managerComments="
-				+ managerComments + ", appliedOn=" + appliedOn + ", leaveStatus=" + leaveStatus + "]";
+		return "Leave [leaveID=" + leaveID + ", employee=" + employee + ", startDate=" + startDate + ", endDate="
+				+ endDate + ", numDays=" + numDays + ", leaveType=" + leaveType + ", reasons=" + reasons
+				+ ", managerComments=" + managerComments + ", appliedOn=" + appliedOn + ", leaveStatus=" + leaveStatus
+				+ "]";
 	}
 	
 }

@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import com.leave.obj.Employee;
 import com.leave.obj.Leave;
 import com.leave.obj.LeaveErrors;
 
@@ -27,28 +28,28 @@ public class ApplyLeaveService {
     	
     	LeaveErrors errorList = new LeaveErrors();
 
-    	int emplDaysLeft;
-    	int empID = 1;	//TODO get emp id
-    	//query database for employee # of requested days left
-    	emplDaysLeft = 50;	//TODO actual db request
     	//TODO if request fails
     	
-    	/* TODO a lot of this rides on Employee object being created
+    	/*
+    	//TODO a lot of this rides on Employee object/db being created
     	EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPADefaults");
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction txn = em.getTransaction();
 		
 		txn.begin();
-		Leave test = em.find(Leave.class, empID);
+		Employee emp = em.find(Employee.class, leave.getEmployee());
 		txn.commit();
+		
+		int emplDaysLeft = emp.getLeaveBalance();
 		*/
 
+    	int emplDaysLeft = 50;
+		
 		//make sure employee has enough days
     	if (leave.getNumDays() <= emplDaysLeft){
-    		//get database for leaves from user
     		//make sure no overlaps between any of the leaves
     		//hoo boy TODO
-
+    		
     		//update employee # of requested days left
     		//add the new leave to database of leaves
     		//TODO have to coordinate with other teams for what
