@@ -4,6 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+
 import com.leave.obj.Leave;
 import com.leave.obj.LeaveErrors;
 
@@ -23,10 +28,21 @@ public class ApplyLeaveService {
     	LeaveErrors errorList = new LeaveErrors();
 
     	int emplDaysLeft;
+    	int empID = 1;	//TODO get emp id
     	//query database for employee # of requested days left
     	emplDaysLeft = 50;	//TODO actual db request
     	//TODO if request fails
     	
+    	/* TODO a lot of this rides on Employee object being created
+    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPADefaults");
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction txn = em.getTransaction();
+		
+		txn.begin();
+		Leave test = em.find(Leave.class, empID);
+		txn.commit();
+		*/
+
 		//make sure employee has enough days
     	if (leave.getNumDays() <= emplDaysLeft){
     		//get database for leaves from user
@@ -85,8 +101,13 @@ public class ApplyLeaveService {
 	    			long diffInMillies = Math.abs(end.getTime() - start.getTime());
 	    		    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) + 1;
 	    		    	//adding 1 because leave requests are inclusive in days
-	    			if (numDays != diff)
+	    			if (numDays != diff){
 	    				errorList.addError("Error: Number of leave days is incorrect, should be : " + diff);
+	    			}
+	    			else{	//all validation logic succeeded
+	    				leave.setAppliedOn(cal.getTime());
+	    				leave.setLeaveStatus("PENDING");
+	    			}
     			}
     		}
     		else{
