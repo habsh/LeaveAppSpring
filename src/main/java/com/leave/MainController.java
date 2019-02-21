@@ -36,7 +36,8 @@ public class MainController {
     public LeaveErrors applyLeave(@RequestBody Leave leave) {
 
     	LeaveErrors errorList = ApplyLeaveService.validateLeave(leave);
-    	errorList.addAllErrors(ApplyLeaveService.dbLeave(leave));
+    	if (errorList.errorCount() == 0)
+    		errorList.addAllErrors(ApplyLeaveService.dbLeave(leave));
 		    	
     	return errorList;
     }

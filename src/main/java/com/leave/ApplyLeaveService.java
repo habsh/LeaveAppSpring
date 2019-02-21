@@ -28,7 +28,7 @@ public class ApplyLeaveService {
     	//TODO if request fails
     	
 		//make sure employee has enough days
-    	if (leave.getNumDays() > emplDaysLeft){
+    	if (leave.getNumDays() <= emplDaysLeft){
     		//get database for leaves from user
     		//make sure no overlaps between any of the leaves
     		//hoo boy TODO
@@ -83,7 +83,8 @@ public class ApplyLeaveService {
     			if (errorList.errorCount() == 0){
     				
 	    			long diffInMillies = Math.abs(end.getTime() - start.getTime());
-	    		    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+	    		    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) + 1;
+	    		    	//adding 1 because leave requests are inclusive in days
 	    			if (numDays != diff)
 	    				errorList.addError("Error: Number of leave days is incorrect, should be : " + diff);
     			}

@@ -75,7 +75,7 @@ public class ApplyLeaveServiceTest {
 		assertEquals("Incorrect num of days",1,response.errorCount());
 		response.getErrors().forEach(System.out::println);
 		
-		testing.setNumDays(5);
+		testing.setNumDays(6);
 		response = controller.applyLeave(testing);
 		assertEquals("Successful validation",0,response.errorCount());
 		response.getErrors().forEach(System.out::println);
