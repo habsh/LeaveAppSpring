@@ -8,7 +8,7 @@ public class LeaveApplication {
 
 	public static void main(String[] args) {
 		
-		
+		System.out.println("This is an added log message to indicate that Leave Application has started");
 		SpringApplication.run(LeaveApplication.class, args);
 	}
 }
