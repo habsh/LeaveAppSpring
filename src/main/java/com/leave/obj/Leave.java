@@ -2,15 +2,22 @@ package com.leave.obj;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.Proxy;
+
 
 @Entity
-@Table(name="Leave_History")
+@Table(name="leave_history",
+	uniqueConstraints=@UniqueConstraint(columnNames={"leave_id"}))
+@Proxy(lazy=false)
 public class Leave {
 
 	@Id
@@ -18,17 +25,54 @@ public class Leave {
 	private int leaveID;
 
 	@ManyToOne
+	@Column(name = "emp_id")
 	private Employee employee;
 	
+	@Column(name = "start_date")
 	private Date startDate;
+	
+	@Column(name = "end_date")
 	private Date endDate;
+	
+	@Column(name = "number_of_days")
 	private int numDays;
+	
+	@Column(name = "leave_type")
 	private String leaveType;
+	
+	@Column(name = "reasons")
 	private String reasons;
+	
+	@Column(name = "manager_comments")
 	private String managerComments;
+	
+	@Column(name = "applied_on")
 	private Date appliedOn;
+	
+	@Column(name = "leave_status")
 	private String leaveStatus;
 	
+	public Leave() {
+		super();
+	}
+
+	public Leave(int leaveID, Employee employee, Date startDate, Date endDate, int numDays, String leaveType,
+			String reasons, String managerComments, Date appliedOn, String leaveStatus) {
+		super();
+		this.leaveID = leaveID;
+		this.employee = employee;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.numDays = numDays;
+		this.leaveType = leaveType;
+		this.reasons = reasons;
+		this.managerComments = managerComments;
+		this.appliedOn = appliedOn;
+		this.leaveStatus = leaveStatus;
+	}
+
+
+
 	public int getLeaveID() {
 		return leaveID;
 	}

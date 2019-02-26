@@ -1,5 +1,6 @@
 package com.leave.obj;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,8 +16,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="Employee")
-public class Employee {
+public class Employee implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int empId;
@@ -101,6 +106,10 @@ public class Employee {
 
 	public void setLeaves(List<Leave> leaves) {
 		this.leaves = leaves;
+	}
+	
+	public void addLeave(Leave leave){
+		this.leaves.add(leave);
 	}
 
 	@Override
