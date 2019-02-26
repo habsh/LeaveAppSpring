@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.hex.leaverequest.model.Employee;
-import com.hex.leaverequest.service.EmployeeService;
 import com.leave.dtos.EmployeeDetailsDTO;
 import com.leave.obj.Leave;
 import com.leave.obj.LeaveDAO;
@@ -19,9 +17,6 @@ import com.leave.services.EmployeeDataService;
 
 @Service("applyLeaveService")
 public class ApplyLeaveService {
-	
-	@Autowired
-	LeaveDAO leaveDao;
 	
 	private EmployeeDataService employeeService;
 
@@ -45,7 +40,7 @@ public class ApplyLeaveService {
     	//TODO if request fails
 
 		EmployeeDetailsDTO emp = (EmployeeDetailsDTO) employeeService.getEmployeeData(leave.getEmployee().getEmpId());
-		List<Leave> leaves = leaveDao.getEmployeeLeaves(leave.getEmployee().getEmpId());
+		List<Leave> leaves = employeeService.getLeaveData(emp.getEmployeeId());
 		int emplDaysLeft = emp.getLeaveBalance();
 		
 		//make sure employee has enough days

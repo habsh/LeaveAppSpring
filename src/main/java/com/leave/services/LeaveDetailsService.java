@@ -3,8 +3,10 @@ package com.leave.services;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Criteria;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -118,6 +120,15 @@ public class LeaveDetailsService implements EmployeeDataService {
 		employee.setLeaveBalance(newTime);
 		employeeRepository.save(employee);
 		return employee;
+	}
+	
+	@Override
+	public List<Leave> getLeaveData(Integer id) {
+		
+		List<Leave> leaves = Optional.ofNullable(leaveRepository.findLeaveByAttribute(id))
+				.orElseThrow(()-> new LeaveDetailsNotFoundException("Not leave details Available")); 
+	
+		return leaves;
 	}
 
 }
