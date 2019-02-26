@@ -36,8 +36,8 @@ public class LeaveDetailsService implements EmployeeDataService {
 
 		Employee employee = Optional.ofNullable(employeeRepository.findOne
 					(
-						Optional.ofNullable(leave.getEmployee().getEmpId())
-						.orElseThrow(()-> new UserNotFoundException("Not employee available")) 	
+						Optional.ofNullable(leave.getEmployee())
+						.orElseThrow(()-> new UserNotFoundException("Not employee available")).getEmpId() 	
 						)
 				)
 				.orElseThrow(()-> new UserNotFoundException("Not employee available")); 
