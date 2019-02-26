@@ -17,7 +17,7 @@ import org.hibernate.annotations.Proxy;
 
 @Entity
 @Table(name="leave_history",
-	uniqueConstraints=@UniqueConstraint(columnNames={"leave_id"}))
+	uniqueConstraints=@UniqueConstraint(columnNames={"leaveid"}))
 @Proxy(lazy=false)
 public class Leave {
 
@@ -26,7 +26,7 @@ public class Leave {
 	private int leaveID;
 
 	@ManyToOne
-	@Column(name = "emp_id")
+	@JoinColumn(name = "emp_id")
 	private Employee employee;
 	
 	@Column(name = "start_date")

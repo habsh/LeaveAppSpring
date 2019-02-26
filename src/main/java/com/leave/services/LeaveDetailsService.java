@@ -95,6 +95,30 @@ public class LeaveDetailsService implements EmployeeDataService {
 		
 		return leave;
 	}
+	
+	@Override
+	public Leave postAddLeave(Leave leave) {
+		
+		leave.setLeaveStatus(AcceptanceEnum.pending.name());
+		
+		leaveRepository.save(leave);
+		
+		return leave;
+	}
+	
+	@Override
+	public Employee postUpdateEmployee(Integer id, Integer newTime) {
+		Employee employee = Optional.ofNullable(employeeRepository.findOne
+				(
+					Optional.ofNullable(id)
+					.orElseThrow(()-> new UserNotFoundException("Not employee available"))
+					)
+			)
+			.orElseThrow(()-> new UserNotFoundException("Not employee available")); 
+		employee.setLeaveBalance(newTime);
+		employeeRepository.save(employee);
+		return employee;
+	}
 
 }
 

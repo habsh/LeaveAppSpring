@@ -6,27 +6,27 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.hex.leaverequest.model.Employee;
 import com.hex.leaverequest.service.EmployeeService;
+import com.leave.dtos.EmployeeDetailsDTO;
 import com.leave.obj.Leave;
 import com.leave.obj.LeaveDAO;
 import com.leave.obj.LeaveErrors;
+import com.leave.services.EmployeeDataService;
 
 @Service("applyLeaveService")
 public class ApplyLeaveService {
 	
 	@Autowired
-	EmployeeService employeeService;
-	
-	@Autowired
 	LeaveDAO leaveDao;
 	
-	//TODO REMOVE THIS ONCE DATABASE IS INTEGRATED AND RENAME CORRECTLY
-	public LeaveErrors dbLeave(Leave leave){
-		LeaveErrors errorList = new LeaveErrors();	
-    	return errorList;
+	private EmployeeDataService employeeService;
+
+	public ApplyLeaveService(@Qualifier("LeaveDetailsService")EmployeeDataService employeeDataService) {
+		this.employeeService = employeeDataService;
 	}
 	
 	 /**
@@ -38,13 +38,13 @@ public class ApplyLeaveService {
      * @param leave - the Leave object to be added to db
      * @return a list of errors, blank if valid
      */
-    public LeaveErrors realDbLeave(Leave leave){
+    public LeaveErrors dbLeave(Leave leave){
     	
     	LeaveErrors errorList = new LeaveErrors();
 
     	//TODO if request fails
 
-		Employee emp = (Employee) employeeService.getEmployee(leave.getEmployee().getEmpId());
+		EmployeeDetailsDTO emp = (EmployeeDetailsDTO) employeeService.getEmployeeData(leave.getEmployee().getEmpId());
 		List<Leave> leaves = leaveDao.getEmployeeLeaves(leave.getEmployee().getEmpId());
 		int emplDaysLeft = emp.getLeaveBalance();
 		
@@ -62,9 +62,8 @@ public class ApplyLeaveService {
          		//passed leave overlap validation!  time to add leave
         		//update employee # of requested days left
         		//add the new leave to database of leaves
-    			emp.setLeaveBalance(emp.getLeaveBalance() - leave.getNumDays());
-    			employeeService.updateEmployee(emp);
-    			leaveDao.addLeave(leave);
+    			employeeService.postUpdateEmployee(emp.getEmployeeId(), emp.getLeaveBalance()- leave.getNumDays());
+    			employeeService.postAddLeave(leave);
     		}
     	}
     	else

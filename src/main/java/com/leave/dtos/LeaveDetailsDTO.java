@@ -19,9 +19,9 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 			int days, String leaveType, String status) {
 		super();
 		this.leaveId = leaveId;
-		this.employeeId = employeeId;
+		this.setEmployeeId(employeeId);
 		this.employeeName = employeeName;
-		this.leaveBalance = leaveBalance;
+		this.setLeaveBalance(leaveBalance);
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.days = days;
@@ -35,9 +35,9 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 			int days, String leaveType, String reason, String status, String managerCommnets) {
 		super();
 		this.leaveId = leaveId;
-		this.employeeId = employeeId;
+		this.setEmployeeId(employeeId);
 		this.employeeName = employeeName;
-		this.leaveBalance = leaveBalance;
+		this.setLeaveBalance(leaveBalance);
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.days = days;
@@ -59,13 +59,13 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 
 
 	public int getEmployeeId() {
-		return employeeId;
+		return getEmployeeId();
 	}
 
 
 
 	public void setEmployeeId(int employeeId) {
-		this.employeeId = employeeId;
+		setEmployeeId(employeeId);
 	}
 
 
@@ -83,13 +83,13 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 
 
 	public int getLeaveBalance() {
-		return leaveBalance;
+		return getLeaveBalance();
 	}
 
 
 
 	public void setLeaveBalance(int leaveBalance) {
-		this.leaveBalance = leaveBalance;
+		setLeaveBalance(leaveBalance);
 	}
 
 
@@ -243,8 +243,8 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public String toString() {
 		return "LeaveDetailsDTO [leaveId=" + leaveId + ", startDate=" + startDate + ", endDate=" + endDate + ", days="
 				+ days + ", leaveType=" + leaveType + ", reason=" + reason + ", status=" + status + ", managerCommnets="
-				+ managerCommnets + ", employeeId=" + employeeId + ", employeeName=" + employeeName + ", leaveBalance="
-				+ leaveBalance + "]";
+				+ managerCommnets + ", employeeId=" + getEmployeeId() + ", employeeName=" + employeeName + ", leaveBalance="
+				+ getLeaveBalance() + "]";
 	}
 	
 
