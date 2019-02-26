@@ -1,19 +1,28 @@
-package com.leave;
+package com.leave.applyleave.service;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
-import com.leave.obj.Employee;
+import com.leave.dtos.EmployeeDetailsDTO;
 import com.leave.obj.Leave;
+import com.leave.obj.LeaveDAO;
 import com.leave.obj.LeaveErrors;
+import com.leave.services.EmployeeDataService;
 
+@Service("applyLeaveService")
 public class ApplyLeaveService {
+	
+	private EmployeeDataService employeeService;
+
+	public ApplyLeaveService(@Qualifier("LeaveDetailsService")EmployeeDataService employeeDataService) {
+		this.employeeService = employeeDataService;
+	}
 	
 	 /**
      * dbLeave
@@ -24,40 +33,37 @@ public class ApplyLeaveService {
      * @param leave - the Leave object to be added to db
      * @return a list of errors, blank if valid
      */
-    public static LeaveErrors dbLeave(Leave leave){
+    public LeaveErrors dbLeave(Leave leave){
     	
     	LeaveErrors errorList = new LeaveErrors();
 
     	//TODO if request fails
-    	
-    	/*
-    	//TODO a lot of this rides on Employee object/db being created
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPADefaults");
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction txn = em.getTransaction();
-		
-		txn.begin();
-		Employee emp = em.find(Employee.class, leave.getEmployee());
-		txn.commit();
-		
-		int emplDaysLeft = emp.getLeaveBalance();
-		*/
 
-    	int emplDaysLeft = 50;
+		EmployeeDetailsDTO emp = (EmployeeDetailsDTO) employeeService.getEmployeeData(leave.getEmployee().getEmpId());
+		List<Leave> leaves = employeeService.getLeaveData(emp.getEmployeeId());
+		int emplDaysLeft = emp.getLeaveBalance();
 		
 		//make sure employee has enough days
     	if (leave.getNumDays() <= emplDaysLeft){
     		//make sure no overlaps between any of the leaves
-    		//hoo boy TODO
+    		leaves.forEach((toCheck) -> {
+    			if (checkOverlap(toCheck,leave)){
+    				errorList.addError("Error: Leave overlaps with other leaves");
+    				return;
+    			}
+			});
+    		if (errorList.errorCount() == 0){
     		
-    		//update employee # of requested days left
-    		//add the new leave to database of leaves
-    		//TODO have to coordinate with other teams for what
-    		//the Leave object needs to contain in fields
+         		//passed leave overlap validation!  time to add leave
+        		//update employee # of requested days left
+        		//add the new leave to database of leaves
+    			employeeService.postUpdateEmployee(emp.getEmployeeId(), emp.getLeaveBalance()- leave.getNumDays());
+    			employeeService.postAddLeave(leave);
+    		}
     	}
     	else
     		errorList.addError("Error: Employee does not have enough days left");
-
+    	
     	return errorList;
     }
    
@@ -74,7 +80,7 @@ public class ApplyLeaveService {
      * @param leave - the Leave object to be validated
      * @return a list of errors, blank if valid
      */
-    public static LeaveErrors validateLeave(Leave leave){
+    public LeaveErrors validateLeave(Leave leave){
     	
     	LeaveErrors errorList = new LeaveErrors();
     	
@@ -130,5 +136,28 @@ public class ApplyLeaveService {
 			errorList.addError("Error: Leave object is null");
 		}
     	return errorList;
+    }
+    
+    
+    /**
+     * checkOverlap
+     * 
+     * Takes 2 Leave objects and checks if their date ranges overlap
+     * checks inclusively for start/end date ranges
+     * @param l1 - first leave to compare
+     * @param l2 - second leave to compare
+     * @return true or false whether overlapped or not
+     */
+    public boolean checkOverlap(Leave l1, Leave l2){
+    	
+    	Date start1 = l1.getStartDate();
+    	Date start2 = l2.getStartDate();
+    	Date end1 = l1.getEndDate();
+    	Date end2 = l2.getEndDate();
+
+    	Date lateStart = (start1.compareTo(start2) > 0) ? start1 : start2;
+    	Date earlyEnd = (end1.compareTo(end2) < 0) ? end1 : end2;
+
+    	return lateStart.compareTo(earlyEnd) < 0;
     }
 }

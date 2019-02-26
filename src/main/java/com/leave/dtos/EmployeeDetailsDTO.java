@@ -1,17 +1,17 @@
 package com.leave.dtos;
 
 public class EmployeeDetailsDTO {
-	int employeeId;
+	private int employeeId;
 	String employeeName;
-	int leaveBalance;
+	private int leaveBalance;
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + employeeId;
+		result = prime * result + getEmployeeId();
 		result = prime * result + ((employeeName == null) ? 0 : employeeName.hashCode());
-		result = prime * result + leaveBalance;
+		result = prime * result + getLeaveBalance();
 		return result;
 	}
 	@Override
@@ -23,16 +23,28 @@ public class EmployeeDetailsDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		EmployeeDetailsDTO other = (EmployeeDetailsDTO) obj;
-		if (employeeId != other.employeeId)
+		if (getEmployeeId() != other.getEmployeeId())
 			return false;
 		if (employeeName == null) {
 			if (other.employeeName != null)
 				return false;
 		} else if (!employeeName.equals(other.employeeName))
 			return false;
-		if (leaveBalance != other.leaveBalance)
+		if (getLeaveBalance() != other.getLeaveBalance())
 			return false;
 		return true;
+	}
+	public int getLeaveBalance() {
+		return leaveBalance;
+	}
+	public void setLeaveBalance(int leaveBalance) {
+		this.leaveBalance = leaveBalance;
+	}
+	public int getEmployeeId() {
+		return employeeId;
+	}
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
 	}
 	
 	

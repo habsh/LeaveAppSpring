@@ -94,7 +94,7 @@ public class EmployeeContactDetailsDTO extends EmployeeDetailsDTO{
 	public String toString() {
 		return "EmployeeContactDetailsDTO [empPhone=" + empPhone + ", empDept=" + empDept + ", empMail=" + empMail
 				+ ", empDoj=" + empDoj + ", leaveBalance=" + leaveBalance + ", empMngId=" + empMngId + ", employeeId="
-				+ employeeId + ", employeeName=" + employeeName + "]";
+				+ getEmployeeId() + ", employeeName=" + employeeName + "]";
 	}
 	
 	

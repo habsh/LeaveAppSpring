@@ -2,28 +2,22 @@ package com.leave;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leave.applyleave.service.ApplyLeaveService;
 import com.leave.obj.Leave;
 import com.leave.obj.LeaveErrors;
-import com.leave.ApplyLeaveService;
 
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class MainController {
 
-    @RequestMapping("/")
-    public String index() {
-        return "Greetings from Spring Boot!";
-    }
-    
-    @RequestMapping("/add/{firstno}/{secondno}")
-    public String addition(@PathVariable String firstno, @PathVariable String secondno) {
-        int result = Integer.parseInt(firstno)+Integer.parseInt(secondno);
-    	return String.valueOf(result);
-    }
+	@Autowired
+	ApplyLeaveService applyLeaveService;
 
     /**
      * applyLeave
@@ -35,9 +29,9 @@ public class MainController {
     @RequestMapping(value="/applyLeave", method = RequestMethod.POST)
     public LeaveErrors applyLeave(@RequestBody Leave leave) {
 
-    	LeaveErrors errorList = ApplyLeaveService.validateLeave(leave);
+    	LeaveErrors errorList = applyLeaveService.validateLeave(leave);
     	if (errorList.errorCount() == 0)
-    		errorList.addAllErrors(ApplyLeaveService.dbLeave(leave));
+    		errorList.addAllErrors(applyLeaveService.dbLeave(leave));
 		    	
     	return errorList;
     }
