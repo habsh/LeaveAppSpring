@@ -4,14 +4,13 @@ public class EmployeeDetailsDTO {
 	private int employeeId;
 	String employeeName;
 	private int leaveBalance;
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + getEmployeeId();
+		result = prime * result + employeeId;
 		result = prime * result + ((employeeName == null) ? 0 : employeeName.hashCode());
-		result = prime * result + getLeaveBalance();
+		result = prime * result + leaveBalance;
 		return result;
 	}
 	@Override
@@ -23,22 +22,21 @@ public class EmployeeDetailsDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		EmployeeDetailsDTO other = (EmployeeDetailsDTO) obj;
-		if (getEmployeeId() != other.getEmployeeId())
+		if (employeeId != other.employeeId)
 			return false;
 		if (employeeName == null) {
 			if (other.employeeName != null)
 				return false;
 		} else if (!employeeName.equals(other.employeeName))
 			return false;
-		if (getLeaveBalance() != other.getLeaveBalance())
+		if (leaveBalance != other.leaveBalance)
 			return false;
 		return true;
 	}
-	public int getLeaveBalance() {
-		return leaveBalance;
-	}
-	public void setLeaveBalance(int leaveBalance) {
-		this.leaveBalance = leaveBalance;
+	@Override
+	public String toString() {
+		return "EmployeeDetailsDTO [employeeId=" + employeeId + ", employeeName=" + employeeName + ", leaveBalance="
+				+ leaveBalance + "]";
 	}
 	public int getEmployeeId() {
 		return employeeId;
@@ -46,6 +44,20 @@ public class EmployeeDetailsDTO {
 	public void setEmployeeId(int employeeId) {
 		this.employeeId = employeeId;
 	}
+	public String getEmployeeName() {
+		return employeeName;
+	}
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+	public int getLeaveBalance() {
+		return leaveBalance;
+	}
+	public void setLeaveBalance(int leaveBalance) {
+		this.leaveBalance = leaveBalance;
+	}
 	
+
+
 	
 }

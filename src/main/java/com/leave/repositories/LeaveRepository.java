@@ -11,6 +11,6 @@ import com.leave.obj.Leave;
 @Repository
 public interface LeaveRepository extends JpaRepository<Leave, Integer>{
 	
-	  @Query("select * from leave_history where t.emp_id = ?1")
+	  @Query(value = "select * from leave_history where t.emp_id = ?1" , nativeQuery = true)
 	  List<Leave> findLeaveByAttribute(int attribute);
 }
