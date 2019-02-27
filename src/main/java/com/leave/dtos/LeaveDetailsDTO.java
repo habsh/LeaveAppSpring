@@ -58,19 +58,7 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	}
 
 
-	public int getEmployeeId() {
-		return getEmployeeId();
-	}
-
-
-
-	public void setEmployeeId(int employeeId) {
-		setEmployeeId(employeeId);
-	}
-
-
-
-	public String getEmployeeName() {
+		public String getEmployeeName() {
 		return employeeName;
 	}
 
@@ -78,18 +66,6 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
-	}
-
-
-
-	public int getLeaveBalance() {
-		return getLeaveBalance();
-	}
-
-
-
-	public void setLeaveBalance(int leaveBalance) {
-		setLeaveBalance(leaveBalance);
 	}
 
 
