@@ -93,8 +93,8 @@ public class EmployeeContactDetailsDTO extends EmployeeDetailsDTO{
 	@Override
 	public String toString() {
 		return "EmployeeContactDetailsDTO [empPhone=" + empPhone + ", empDept=" + empDept + ", empMail=" + empMail
-				+ ", empDoj=" + empDoj + ", leaveBalance=" + leaveBalance + ", empMngId=" + empMngId + ", employeeId="
-				+ getEmployeeId() + ", employeeName=" + employeeName + "]";
+				+ ", empDoj=" + empDoj + ", leaveBalance=" + leaveBalance + ", empMngId=" + empMngId + ", employeeName="
+				+ employeeName + "]";
 	}
 	
 	

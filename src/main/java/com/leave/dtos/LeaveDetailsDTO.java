@@ -11,11 +11,6 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	String managerCommnets;
 	String acceptance;
 	
-	public LeaveDetailsDTO() {
-		super();
-	}
-	
-	
 	public int getLeaveId() {
 		return leaveId;
 	}
@@ -34,6 +29,17 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
+	}
+
+
+
+	public String getAcceptance() {
+		return acceptance;
+	}
+
+
+	public void setAcceptance(String acceptance) {
+		this.acceptance = acceptance;
 	}
 
 
