@@ -5,13 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.leave.dtos.EmployeeDetailsDTO;
 import com.leave.obj.Leave;
-import com.leave.obj.LeaveDAO;
 import com.leave.obj.LeaveErrors;
 import com.leave.services.EmployeeDataService;
 
