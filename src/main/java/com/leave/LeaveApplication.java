@@ -2,7 +2,9 @@ package com.leave;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.context.annotation.ComponentScan;
+@ComponentScan("com.leavestatus.controller")
+@ComponentScan("com.leave.services")
 @SpringBootApplication
 public class LeaveApplication {
 
