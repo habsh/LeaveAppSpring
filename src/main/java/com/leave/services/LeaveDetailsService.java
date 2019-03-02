@@ -2,17 +2,19 @@ package com.leave.services;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-import org.hibernate.Criteria;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.leave.dtos.EmployeeDetailsDTO;
 import com.leave.dtos.LeaveDetailsDTO;
+import com.leave.dtos.LeavesDetailsByEmployeeDTO;
 import com.leave.exceptions.IncorrectLeaveBalanceException;
 import com.leave.exceptions.LeaveDetailsNotFoundException;
 import com.leave.exceptions.UserNotFoundException;
@@ -46,70 +48,51 @@ public class LeaveDetailsService implements EmployeeDataService {
 				)
 				.orElseThrow(()-> new UserNotFoundException("Not employee available")); 
 
-		LeaveDetailsDTO leaveDetailsDTO = new LeaveDetailsDTO();
+		LeaveDetailsDTO leaveDetailsDTO = leaveEntityToLeaveDetailsDTO(leave);
 
-		leaveDetailsDTO.setLeaveId(leave.getLeaveID());
 		leaveDetailsDTO.setEmployeeId(employee.getEmpId());
 		leaveDetailsDTO.setEmployeeName(Optional.ofNullable(employee.getEmpName()).orElse(" "));
-		leaveDetailsDTO.setEndDate(Optional.ofNullable(leave.getEndDate()).orElse(Date.from(Instant.now())).toString());
 		leaveDetailsDTO.setLeaveBalance(Optional.ofNullable(employee.getLeaveBalance()).orElse(0));
-		leaveDetailsDTO.setReason(Optional.ofNullable(leave.getReasons()).orElse(" "));
-		leaveDetailsDTO.setDays(Optional.ofNullable(leave.getNumDays()).orElse(0));
-		leaveDetailsDTO.setLeaveType(Optional.ofNullable(leave.getLeaveType()).orElse(" "));
-
-		if(Optional.ofNullable(leave.getEndDate()).isPresent())
-			leaveDetailsDTO.setEndDate(new SimpleDateFormat("MM/dd/yyyy").format(leave.getEndDate()).toString());
-		else
-			leaveDetailsDTO.setEndDate(" ");
-
-
-		if(Optional.ofNullable(leave.getStartDate()).isPresent())
-			leaveDetailsDTO.setStartDate(new SimpleDateFormat("MM/dd/yyyy").format(leave.getStartDate()).toString());
-		else
-			leaveDetailsDTO.setStartDate(" ");
-
-		leaveDetailsDTO.setStatus(Optional.ofNullable(leave.getLeaveStatus()).orElse(" "));
-		leaveDetailsDTO.setManagerCommnets(Optional.ofNullable(leave.getManagerComments()).orElse(" "));
 
 		return leaveDetailsDTO;
 	}
 
 	@Override
 	public EmployeeDetailsDTO postLeaveAccepted(LeaveDetailsDTO leave) {
-		
+
 		if(leave.getStatus().equals(AcceptanceEnum.approved.name())||
 				leave.getStatus().equals(AcceptanceEnum.denied.name()))
 			return null;
-				
+
 		Leave dbLeave = Optional.ofNullable(leaveRepository.findOne(leave.getLeaveId()))
 				.orElseThrow(()-> new LeaveDetailsNotFoundException("Not leave details Available")); 
 
 		Employee employee = Optional.ofNullable(employeeRepository.findOne(dbLeave.getEmployee().getEmpId()))
 				.orElseThrow(()-> new UserNotFoundException("User not found in given leave details"));
-		
+
 		leave.setStatus(AcceptanceEnum.approved.name());
 		leave.setLeaveBalance(employee.getLeaveBalance()-leave.getDays());
-		
+
 		if(leave.getLeaveBalance()<0)
 			throw new IncorrectLeaveBalanceException("Not enough days");
-			
+
 		dbLeave.setLeaveStatus(leave.getStatus());
 		dbLeave.setManagerComments(leave.getManagerCommnets());
 		employee.setLeaveBalance(leave.getLeaveBalance());
-		
+
 		leaveRepository.save(dbLeave);
 		employeeRepository.save(employee);
-		
+
 		return leave;
 	}
 
 	@Override
 	public EmployeeDetailsDTO postLeaveDenied(LeaveDetailsDTO leave) {
-		
+
 		if(leave.getStatus().equals(AcceptanceEnum.approved.name())||
 				leave.getStatus().equals(AcceptanceEnum.denied.name()))
 			return null;
-		
+
 		Leave dbLeave = Optional.ofNullable(leaveRepository.findOne(leave.getLeaveId()))
 				.orElseThrow(()-> new LeaveDetailsNotFoundException("Not leave details Available")); 
 
@@ -154,8 +137,86 @@ public class LeaveDetailsService implements EmployeeDataService {
 		return leaves;
 	}
 
+	@Override
+	public List<LeavesDetailsByEmployeeDTO> getAllPendingLeaves() {
+
+		List<Leave> leaves = Optional.ofNullable(leaveRepository.findLeaveByStatus(AcceptanceEnum.pending.name()))
+				.orElseThrow(()-> new LeaveDetailsNotFoundException("Not leave details Available")); 	
+
+		List<LeavesDetailsByEmployeeDTO> pendingLeavesDTO = new ArrayList<>();
+
+		Map<Employee, List<Leave>> pendingLeavesByEmployee = leaves.stream()
+				.filter(leave -> {
+					if(!Optional.ofNullable(leave.getEmployee()).isPresent())
+						new UserNotFoundException("Employee details not available");
+					return true;
+				}
+						)
+				.collect(Collectors.groupingBy(x -> x.getEmployee()));
+
+		pendingLeavesByEmployee.entrySet().stream().forEach(employee->{
+
+			LeavesDetailsByEmployeeDTO leaveDetailsByEmployee = new LeavesDetailsByEmployeeDTO();
+			leaveDetailsByEmployee.setEmployeeId(employee.getKey().getEmpId());
+			leaveDetailsByEmployee.setEmployeeName(employee.getKey().getEmpName());
+			leaveDetailsByEmployee.setLeaveBalance(employee.getKey().getLeaveBalance());
+			List<LeaveDetailsDTO> leaveDetails = new ArrayList<>();
+
+			employee.getValue().stream().forEach(leave -> {
+
+				LeaveDetailsDTO leaveDetail = leaveEntityToLeaveDetailsDTO(leave);
+
+				leaveDetail.setEmployeeId(leaveDetailsByEmployee.getEmployeeId());
+				leaveDetail.setEmployeeName(leaveDetailsByEmployee.getEmployeeName());
+				leaveDetail.setLeaveBalance(leaveDetailsByEmployee.getLeaveBalance());
+
+				leaveDetails.add(leaveDetail);
+
+			});
+
+			leaveDetailsByEmployee.setLeaves(leaveDetails);
+
+			pendingLeavesDTO.add(leaveDetailsByEmployee);
+
+		});
+
+		return pendingLeavesDTO;
+
+	}
+
+
+	private LeaveDetailsDTO leaveEntityToLeaveDetailsDTO(Leave leave) {
+
+		LeaveDetailsDTO leaveDetailsDTO = new LeaveDetailsDTO();
+
+		leaveDetailsDTO.setLeaveId(leave.getLeaveID());
+		leaveDetailsDTO.setEndDate(Optional.ofNullable(leave.getEndDate()).orElse(Date.from(Instant.now())).toString());
+		leaveDetailsDTO.setReason(Optional.ofNullable(leave.getReasons()).orElse(" "));
+		leaveDetailsDTO.setDays(Optional.ofNullable(leave.getNumDays()).orElse(0));
+		leaveDetailsDTO.setLeaveType(Optional.ofNullable(leave.getLeaveType()).orElse(" "));
+
+		if(Optional.ofNullable(leave.getEndDate()).isPresent())
+			leaveDetailsDTO.setEndDate(new SimpleDateFormat("MM/dd/yyyy").format(leave.getEndDate()).toString());
+		else
+			leaveDetailsDTO.setEndDate(" ");
+
+
+		if(Optional.ofNullable(leave.getStartDate()).isPresent())
+			leaveDetailsDTO.setStartDate(new SimpleDateFormat("MM/dd/yyyy").format(leave.getStartDate()).toString());
+		else
+			leaveDetailsDTO.setStartDate(" ");
+
+		leaveDetailsDTO.setStatus(Optional.ofNullable(leave.getLeaveStatus()).orElse(" "));
+		leaveDetailsDTO.setManagerCommnets(Optional.ofNullable(leave.getManagerComments()).orElse(" "));
+
+		return leaveDetailsDTO;	
+
+	}
+
 }
 
 enum AcceptanceEnum{
 	approved, denied, pending
 }
+
+
