@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.leave.dtos.LeaveDetailsDTO;
+import com.leave.obj.LeaveOne;
 import com.leave.services.EmployeeDataService;
 
 @Controller
@@ -34,38 +35,8 @@ public class LeaveStatusController {
 	 */
 	@RequestMapping("/{id}")
 	public ResponseEntity<LeaveDetailsDTO> getLeaveDetails(@PathVariable Integer id){
-		System.out.println("response"+employeeDataService.getLeaveData(id));
-		return new ResponseEntity<LeaveDetailsDTO>((LeaveDetailsDTO) employeeDataService.getLeaveData(id),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 
-	 * postLeaveAccepted
-	 * 
-	 * Retrieve data related to employee leave.
-	 * @param	LeaveDetailsDTO		Leave data dto related to the accepted leave.
-	 * @return	{@link LeaveDetailsDTO} Data related to the employee leave accepted.
-	 *
-	 */
-	@RequestMapping(value="/accepted",headers="content-type=application/json")
-	public ResponseEntity<LeaveDetailsDTO> postLeaveAccepted(@RequestBody LeaveDetailsDTO leaveDetailsDTO){
-		return new ResponseEntity<LeaveDetailsDTO>((LeaveDetailsDTO) employeeDataService.postLeaveAccepted(leaveDetailsDTO),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 
-	 * postLeaveDenied
-	 * 
-	 * Retrieve data related to employee leave.
-	 * @param	LeaveDetailsDTO		Leave data dto related to the denied leave.
-	 * @return	{@link LeaveDetailsDTO} Data related to the employee leave ted.
-	 *
-	 */
-	@RequestMapping(value="/denied",headers="content-type=application/json")
-	public ResponseEntity<LeaveDetailsDTO> postLeaveDenied(@RequestBody LeaveDetailsDTO leaveDetailsDTO){
-		return new ResponseEntity<LeaveDetailsDTO>((LeaveDetailsDTO) employeeDataService.postLeaveDenied(leaveDetailsDTO),
+		//System.out.println("response"+employeeDataService.getLeaveData(id));
+		return new ResponseEntity(employeeDataService.getLeaveDataOne(id),
 				HttpStatus.OK);
 	}
 

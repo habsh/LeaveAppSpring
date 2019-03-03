@@ -2,12 +2,18 @@ package com.leave.services;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.SharedSessionContract;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.web.ServerProperties.Session;
 import org.springframework.stereotype.Service;
 
 import com.leave.dtos.EmployeeDetailsDTO;
@@ -16,14 +22,17 @@ import com.leave.exceptions.LeaveDetailsNotFoundException;
 import com.leave.exceptions.UserNotFoundException;
 import com.leave.obj.Employee;
 import com.leave.obj.Leave;
+import com.leave.obj.LeaveOne;
 import com.leave.repositories.EmployeeRepository;
 import com.leave.repositories.LeaveRepository;
+import com.leave.repositories.LeaveRepositoryOne;
 
 @Service
 @Qualifier(value="LeaveDetailsService")
 public class LeaveDetailsService implements EmployeeDataService {
 	
 	private LeaveRepository leaveRepository;
+	private LeaveRepositoryOne leaveRepositoryOne;
 	private EmployeeRepository employeeRepository;
 	
 	public LeaveDetailsService(LeaveRepository leaveRepository, EmployeeRepository employeeRepository) {
@@ -129,6 +138,32 @@ public class LeaveDetailsService implements EmployeeDataService {
 				.orElseThrow(()-> new LeaveDetailsNotFoundException("Not leave details Available")); 
 	
 		return leaves;
+	}
+	@Override
+	public List<LeaveOne> getLeaveDataOne(Integer id) {
+		//List<LeaveOne> leaves = leaveRepositoryOne.findLeaveByAttribute(id); 
+		//return leaves;
+		
+		Configuration config = new Configuration();
+        SessionFactory factory = new Configuration().configure(
+				"/com/leave/hibernate.cfg.xml")
+				.buildSessionFactory();
+		 org.hibernate.Session sess = factory.openSession();
+		try{
+		     List<LeaveOne> products ;
+		    org.hibernate.Transaction tx = sess.beginTransaction();
+		    products = sess.createSQLQuery("SELECT * FROM leave_history where emp_id="+id).list();
+		    if(products.size() > 0)
+		    {
+		        return products;
+		    }
+		    	return null;  
+		    }
+	    catch(Exception e)
+	    {
+	        throw e;
+	    }
+		 
 	}
 
 }
