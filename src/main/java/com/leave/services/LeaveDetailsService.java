@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +22,17 @@ import com.leave.exceptions.LeaveDetailsNotFoundException;
 import com.leave.exceptions.UserNotFoundException;
 import com.leave.obj.Employee;
 import com.leave.obj.Leave;
+import com.leave.obj.LeaveOne;
 import com.leave.repositories.EmployeeRepository;
 import com.leave.repositories.LeaveRepository;
+import com.leave.repositories.LeaveRepositoryOne;
 
 @Service
 @Qualifier(value="LeaveDetailsService")
 public class LeaveDetailsService implements EmployeeDataService {
 
 	private LeaveRepository leaveRepository;
+	private LeaveRepositoryOne leaveRepositoryOne;
 	private EmployeeRepository employeeRepository;
 
 	public LeaveDetailsService(LeaveRepository leaveRepository, EmployeeRepository employeeRepository) {
@@ -135,6 +140,50 @@ public class LeaveDetailsService implements EmployeeDataService {
 				.orElseThrow(()-> new LeaveDetailsNotFoundException("Not leave details Available")); 
 
 		return leaves;
+	}
+	@Override
+	public List<LeaveOne> getLeaveDataOne(Integer id) {
+		//List<LeaveOne> leaves = leaveRepositoryOne.findLeaveByAttribute(id); 
+		//return leaves;
+		
+		Configuration config = new Configuration();
+        SessionFactory factory = new Configuration().configure(
+				"/com/leave/hibernate.cfg.xml")
+				.buildSessionFactory();
+		 org.hibernate.Session sess = factory.openSession();
+		try{
+		     List <LeaveOne>products ;
+		    org.hibernate.Transaction tx = sess.beginTransaction();
+		    //products = sess.createSQLQuery("SELECT * FROM leave_history where emp_id="+id).list();
+		    products = sess.createSQLQuery("SELECT * FROM leave_history where emp_id="+id).addEntity(LeaveOne.class).list();
+		    if(products.size() > 0)
+		    {
+		        return products;
+		    	//return (LeaveOne)products.get(0);
+		    	//for (int i = 0; i < products.size(); i++) {
+		    		
+		    	//	Object[] stringValues = (Object[]) products.get(i);
+		    		
+		    	//}
+		    }
+		    	return null;  
+		    }
+	    catch(Exception e)
+	    {
+	        throw e;
+	    }
+		 
+	}
+	
+	public EmployeeDetailsDTO getEmployeeDataById(Integer id) {
+		Employee employee = Optional.ofNullable(employeeRepository.findOne(id))
+				.orElseThrow(()-> new UserNotFoundException("Employee not found")); 
+
+		EmployeeDetailsDTO toReturn = new EmployeeDetailsDTO();
+		toReturn.setEmployeeId(employee.getEmpId());
+		toReturn.setEmployeeName(employee.getEmpName());
+		toReturn.setLeaveBalance(employee.getLeaveBalance());
+		return toReturn;
 	}
 
 	@Override

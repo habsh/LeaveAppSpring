@@ -7,6 +7,7 @@ import com.leave.dtos.LeaveDetailsDTO;
 import com.leave.dtos.LeavesDetailsByEmployeeDTO;
 import com.leave.obj.Employee;
 import com.leave.obj.Leave;
+import com.leave.obj.LeaveOne;
 
 public interface EmployeeDataService {
 	
@@ -17,4 +18,6 @@ public interface EmployeeDataService {
 	Employee postUpdateEmployee(Integer id, Integer newTime);
 	List<Leave> getLeaveData(Integer id);
 	List<LeavesDetailsByEmployeeDTO> getAllPendingLeaves();
+	List<LeaveOne> getLeaveDataOne(Integer id);
+	EmployeeDetailsDTO getEmployeeDataById(Integer id);
 }
