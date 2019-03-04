@@ -61,19 +61,19 @@ public class ApplyLeaveServiceTest {
 		System.out.println("in Leave test - InvalidDates");
 	
 		Calendar cal = Calendar.getInstance();
-		cal.set(2019,2,15);
+		cal.set(2029,2,15);
 		Date date1 = cal.getTime();
 		
 		cal.set(2019,0,15);
 		Date date2 = cal.getTime();
 		
-		cal.set(2019,2,20);
+		cal.set(2029,2,20);
 		Date date3 = cal.getTime();
 		
 		cal.set(2019,1,15);
 		Date date4 = cal.getTime();
 		
-		lr.setLeaveType("Earned Leave");
+		lr.setLeaveType("Earned leave/Privileged leave");
 		lr.setStartDate(date2);
 		lr.setEndDate(date4);
 		

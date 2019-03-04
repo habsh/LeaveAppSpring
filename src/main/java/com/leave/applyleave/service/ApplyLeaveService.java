@@ -50,16 +50,10 @@ public class ApplyLeaveService {
 		toUpdate.setNumDays(leave.getNumDays());
 		toUpdate.setReasons(leave.getReasons());
 		toUpdate.setStartDate(leave.getStartDate());
-		System.out.println("checking leave length " + leaves.size());
 		//make sure employee has enough days
     	if (leave.getNumDays() <= emplDaysLeft){
     		//make sure no overlaps between any of the leaves
     		leaves.forEach((toCheck) -> {
-    			
-    			System.out.println(((Leave) toCheck).getStartDate());
-    			System.out.println(((Leave) toCheck).getEndDate());
-    			System.out.println(((Leave) toUpdate).getStartDate());
-    			System.out.println(((Leave) toUpdate).getEndDate());
     			if (checkOverlap(toCheck,toUpdate)){
     				errorList.addError("Error: Leave overlaps with other leaves");
     				return;
