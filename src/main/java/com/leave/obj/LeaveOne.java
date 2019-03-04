@@ -7,26 +7,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Proxy;
 
+
 @Entity
 @Table(name="leave_history",
 	uniqueConstraints=@UniqueConstraint(columnNames={"leaveid"}))
 @Proxy(lazy=false)
-public class Leave {
+public class LeaveOne {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int leaveID;
 
-	@ManyToOne
-	@JoinColumn(name = "emp_id")
-	private Employee employee;
+	@Column(name = "emp_id")
+	private int employee;
 	
 	@Column(name = "start_date")
 	private Date startDate;
@@ -52,11 +50,11 @@ public class Leave {
 	@Column(name = "leave_status")
 	private String leaveStatus;
 	
-	public Leave() {
+	public LeaveOne() {
 		super();
 	}
 
-	public Leave(int leaveID, Employee employee, Date startDate, Date endDate, int numDays, String leaveType,
+	public LeaveOne(int leaveID, int employee, Date startDate, Date endDate, int numDays, String leaveType,
 			String reasons, String managerComments, Date appliedOn, String leaveStatus) {
 		super();
 		this.leaveID = leaveID;
@@ -80,10 +78,10 @@ public class Leave {
 		this.leaveID = leaveID;
 	}
 
-	public Employee getEmployee() {
+	public int getEmployee() {
 		return employee;
 	}
-	public void setEmployee(Employee employee) {
+	public void setEmployee(int employee) {
 		this.employee = employee;
 	}
 	public Date getStartDate() {
@@ -139,7 +137,7 @@ public class Leave {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((appliedOn == null) ? 0 : appliedOn.hashCode());
-		result = prime * result + ((employee == null) ? 0 : employee.hashCode());
+		result = prime * result + employee;
 		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
 		result = prime * result + leaveID;
 		result = prime * result + ((leaveStatus == null) ? 0 : leaveStatus.hashCode());
@@ -158,17 +156,15 @@ public class Leave {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Leave other = (Leave) obj;
+		LeaveOne other = (LeaveOne) obj;
 		if (appliedOn == null) {
 			if (other.appliedOn != null)
 				return false;
 		} else if (!appliedOn.equals(other.appliedOn))
 			return false;
-		if (employee == null) {
-			if (other.employee != null)
+		if (employee != other.employee) {
 				return false;
-		} else if (!employee.equals(other.employee))
-			return false;
+		}
 		if (endDate == null) {
 			if (other.endDate != null)
 				return false;

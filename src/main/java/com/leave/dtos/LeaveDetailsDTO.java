@@ -9,44 +9,7 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	String reason;
 	String status;
 	String managerCommnets;
-	
-	public LeaveDetailsDTO() {
-		super();
-	}
-
-
-	public LeaveDetailsDTO(int leaveId, int employeeId, String employeeName, int leaveBalance, String startDate, String endDate,
-			int days, String leaveType, String status) {
-		super();
-		this.leaveId = leaveId;
-		this.employeeId = employeeId;
-		this.employeeName = employeeName;
-		this.leaveBalance = leaveBalance;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.days = days;
-		this.leaveType = leaveType;
-		this.status = status;
-	}
-
-
-
-	public LeaveDetailsDTO(int leaveId, int employeeId, String employeeName, int leaveBalance, String startDate, String endDate,
-			int days, String leaveType, String reason, String status, String managerCommnets) {
-		super();
-		this.leaveId = leaveId;
-		this.employeeId = employeeId;
-		this.employeeName = employeeName;
-		this.leaveBalance = leaveBalance;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.days = days;
-		this.leaveType = leaveType;
-		this.reason = reason;
-		this.status = status;
-		this.managerCommnets = managerCommnets;
-	}
-
+	String acceptance;
 	
 	public int getLeaveId() {
 		return leaveId;
@@ -56,18 +19,6 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public void setLeaveId(int leaveId) {
 		this.leaveId = leaveId;
 	}
-
-
-	public int getEmployeeId() {
-		return employeeId;
-	}
-
-
-
-	public void setEmployeeId(int employeeId) {
-		this.employeeId = employeeId;
-	}
-
 
 
 	public String getEmployeeName() {
@@ -82,16 +33,14 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 
 
 
-	public int getLeaveBalance() {
-		return leaveBalance;
+	public String getAcceptance() {
+		return acceptance;
 	}
 
 
-
-	public void setLeaveBalance(int leaveBalance) {
-		this.leaveBalance = leaveBalance;
+	public void setAcceptance(String acceptance) {
+		this.acceptance = acceptance;
 	}
-
 
 
 	public String getStartDate() {
@@ -243,8 +192,8 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public String toString() {
 		return "LeaveDetailsDTO [leaveId=" + leaveId + ", startDate=" + startDate + ", endDate=" + endDate + ", days="
 				+ days + ", leaveType=" + leaveType + ", reason=" + reason + ", status=" + status + ", managerCommnets="
-				+ managerCommnets + ", employeeId=" + employeeId + ", employeeName=" + employeeName + ", leaveBalance="
-				+ leaveBalance + "]";
+				+ managerCommnets + ", employeeId=" + getEmployeeId() + ", employeeName=" + employeeName + ", leaveBalance="
+				+ getLeaveBalance() + "]";
 	}
 	
 
