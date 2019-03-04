@@ -172,6 +172,17 @@ public class LeaveDetailsService implements EmployeeDataService {
 	    }
 		 
 	}
+	
+	public EmployeeDetailsDTO getEmployeeDataById(Integer id) {
+		Employee employee = Optional.ofNullable(employeeRepository.findOne(id))
+				.orElseThrow(()-> new UserNotFoundException("Employee not found")); 
+
+		EmployeeDetailsDTO toReturn = new EmployeeDetailsDTO();
+		toReturn.setEmployeeId(employee.getEmpId());
+		toReturn.setEmployeeName(employee.getEmpName());
+		toReturn.setLeaveBalance(employee.getLeaveBalance());
+		return toReturn;
+	}
 
 }
 

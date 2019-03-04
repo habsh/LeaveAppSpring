@@ -14,6 +14,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Proxy;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @Entity
 @Table(name="leave_history",
