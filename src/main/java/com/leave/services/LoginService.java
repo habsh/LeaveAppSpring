@@ -15,20 +15,20 @@ public class LoginService {
 
 	@Autowired
 	LoginRepository loginRepository;
-	
+
 	@Transactional
 	public List<Login> getAllEmployees() {
 		return loginRepository.findAll();
 	}
-	
+
 	@Transactional
 	public Optional<Login> loginEmployee(String username, String password) {
-		
+
 		Optional<Login> login = Optional.ofNullable(loginRepository.findByUsername(username));
-		
-		if(login.isPresent())
-			return password.equals(login.get().getPassword())?login:null;
-		else 
+
+		if (login.isPresent())
+			return password.equals(login.get().getPassword()) ? login : null;
+		else
 			return null;
 	}
 

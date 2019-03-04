@@ -10,26 +10,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "User")//, uniqueConstraints = @UniqueConstraint(columnNames = { "username", "password" }))
-// @NamedQuery(query="from Login e", name="getEmployee")
-//@Proxy(lazy = false)
+@Table(name = "User_Login") // , uniqueConstraints = @UniqueConstraint(columnNames = {
+					       // "username", "password" }))
 public class Login implements Serializable {
-//	public Login() {
-//		super();
-//	}
-
-//	public Login(String firstName, String lastName, String username, String password) {
-//		super();
-//		this.firstName = firstName;
-//		this.lastName = lastName;
-//		this.username = username;
-//		this.password = password;
-//	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int id;
-	
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "empId")
+	private int empId;
+
 	@Column(name = "firstName")
 	private String firstName;
 
@@ -46,20 +35,6 @@ public class Login implements Serializable {
 		return firstName;
 	}
 	
-	
-
-	public int getId() {
-		return id;
-	}
-
-
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-
-
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
@@ -75,7 +50,13 @@ public class Login implements Serializable {
 	public String getUsername() {
 		return username;
 	}
+	public int getEmpId() {
+		return empId;
+	}
 
+	public void setEmpId(int empId) {
+		this.empId = empId;
+	}
 	public void setUsername(String username) {
 		this.username = username;
 	}
