@@ -1,22 +1,17 @@
 package com.leave.services;
 
-import static org.junit.Assert.fail;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.leave.repositories.EmployeeRepository;
 import com.leave.repositories.LeaveRepository;
 
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
 public class LeaveDetailsServiceTest {
 	
 	@MockBean
@@ -24,7 +19,6 @@ public class LeaveDetailsServiceTest {
 	@MockBean
 	EmployeeRepository employeeRepository;
 	
-	@Autowired
 	LeaveDetailsService leavedetailsService;
 	
 	@BeforeClass
@@ -38,7 +32,6 @@ public class LeaveDetailsServiceTest {
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
 	}
 
 }
