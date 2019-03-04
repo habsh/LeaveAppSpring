@@ -150,12 +150,19 @@ public class LeaveDetailsService implements EmployeeDataService {
 				.buildSessionFactory();
 		 org.hibernate.Session sess = factory.openSession();
 		try{
-		     List<LeaveOne> products ;
+		     List <LeaveOne>products ;
 		    org.hibernate.Transaction tx = sess.beginTransaction();
-		    products = sess.createSQLQuery("SELECT * FROM leave_history where emp_id="+id).list();
+		    //products = sess.createSQLQuery("SELECT * FROM leave_history where emp_id="+id).list();
+		    products = sess.createSQLQuery("SELECT * FROM leave_history where emp_id="+id).addEntity(LeaveOne.class).list();
 		    if(products.size() > 0)
 		    {
 		        return products;
+		    	//return (LeaveOne)products.get(0);
+		    	//for (int i = 0; i < products.size(); i++) {
+		    		
+		    	//	Object[] stringValues = (Object[]) products.get(i);
+		    		
+		    	//}
 		    }
 		    	return null;  
 		    }
