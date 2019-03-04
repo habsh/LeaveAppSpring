@@ -9,13 +9,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-import org.hibernate.SharedSessionContract;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.web.ServerProperties.Session;
 import org.springframework.stereotype.Service;
 
 import com.leave.dtos.EmployeeDetailsDTO;
@@ -177,6 +173,17 @@ public class LeaveDetailsService implements EmployeeDataService {
 	        throw e;
 	    }
 		 
+	}
+	
+	public EmployeeDetailsDTO getEmployeeDataById(Integer id) {
+		Employee employee = Optional.ofNullable(employeeRepository.findOne(id))
+				.orElseThrow(()-> new UserNotFoundException("Employee not found")); 
+
+		EmployeeDetailsDTO toReturn = new EmployeeDetailsDTO();
+		toReturn.setEmployeeId(employee.getEmpId());
+		toReturn.setEmployeeName(employee.getEmpName());
+		toReturn.setLeaveBalance(employee.getLeaveBalance());
+		return toReturn;
 	}
 
 	@Override

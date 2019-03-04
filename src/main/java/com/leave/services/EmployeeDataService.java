@@ -19,5 +19,5 @@ public interface EmployeeDataService {
 	List<Leave> getLeaveData(Integer id);
 	List<LeavesDetailsByEmployeeDTO> getAllPendingLeaves();
 	List<LeaveOne> getLeaveDataOne(Integer id);
-
+	EmployeeDetailsDTO getEmployeeDataById(Integer id);
 }

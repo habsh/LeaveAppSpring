@@ -16,6 +16,7 @@ import com.leave.MainController;
 import com.leave.applyleave.service.ApplyLeaveService;
 import com.leave.obj.Leave;
 import com.leave.obj.LeaveErrors;
+import com.leave.obj.LeaveRequest;
 
 public class ApplyLeaveServiceTest {
 
@@ -39,7 +40,7 @@ public class ApplyLeaveServiceTest {
 		
 		//date fields, and leave type empty
 		System.out.println("in Leave test - LeaveEmpty");
-		LeaveErrors response = controller.applyLeave(new Leave());
+		LeaveErrors response = controller.applyLeave(new LeaveRequest());
 		assertEquals("Leave Validation",2,response.errorCount());
 		response.getErrors().forEach(System.out::println);
 	}
@@ -63,7 +64,7 @@ public class ApplyLeaveServiceTest {
 		cal.set(2019,1,15);
 		Date date4 = cal.getTime();
 		
-		Leave testing = new Leave();
+		LeaveRequest testing = new LeaveRequest();
 		testing.setLeaveType("Earned Leave");
 		testing.setStartDate(date2);
 		testing.setEndDate(date4);

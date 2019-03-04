@@ -35,6 +35,24 @@ public class Employee implements Serializable {
 	
 	@OneToMany(mappedBy="employee",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	private List<Leave> leaves = new ArrayList<Leave>();
+	
+	public Employee() {
+		super();
+	}
+
+	public Employee(int empId, String empName, long empPhone, String empDept, String empMail, Date empDoj,
+			int leaveBalance, int empMngId, List<Leave> leaves) {
+		super();
+		this.empId = empId;
+		this.empName = empName;
+		this.empPhone = empPhone;
+		this.empDept = empDept;
+		this.empMail = empMail;
+		this.empDoj = empDoj;
+		this.leaveBalance = leaveBalance;
+		this.empMngId = empMngId;
+		this.leaves = leaves;
+	}
 
 	public int getEmpId() {
 		return empId;
