@@ -9,44 +9,7 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	String reason;
 	String status;
 	String managerCommnets;
-	
-	public LeaveDetailsDTO() {
-		super();
-	}
-
-
-	public LeaveDetailsDTO(int leaveId, int employeeId, String employeeName, int leaveBalance, String startDate, String endDate,
-			int days, String leaveType, String status) {
-		super();
-		this.leaveId = leaveId;
-		this.setEmployeeId(employeeId);
-		this.employeeName = employeeName;
-		this.setLeaveBalance(leaveBalance);
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.days = days;
-		this.leaveType = leaveType;
-		this.status = status;
-	}
-
-
-
-	public LeaveDetailsDTO(int leaveId, int employeeId, String employeeName, int leaveBalance, String startDate, String endDate,
-			int days, String leaveType, String reason, String status, String managerCommnets) {
-		super();
-		this.leaveId = leaveId;
-		this.setEmployeeId(employeeId);
-		this.employeeName = employeeName;
-		this.setLeaveBalance(leaveBalance);
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.days = days;
-		this.leaveType = leaveType;
-		this.reason = reason;
-		this.status = status;
-		this.managerCommnets = managerCommnets;
-	}
-
+	String acceptance;
 	
 	public int getLeaveId() {
 		return leaveId;
@@ -58,7 +21,7 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	}
 
 
-		public String getEmployeeName() {
+	public String getEmployeeName() {
 		return employeeName;
 	}
 
@@ -68,6 +31,16 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 		this.employeeName = employeeName;
 	}
 
+
+
+	public String getAcceptance() {
+		return acceptance;
+	}
+
+
+	public void setAcceptance(String acceptance) {
+		this.acceptance = acceptance;
+	}
 
 
 	public String getStartDate() {
