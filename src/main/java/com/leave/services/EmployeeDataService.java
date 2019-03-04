@@ -17,4 +17,5 @@ public interface EmployeeDataService {
 	Employee postUpdateEmployee(Integer id, Integer newTime);
 	List<Leave> getLeaveData(Integer id);
 	List<LeaveOne> getLeaveDataOne(Integer id);
+	EmployeeDetailsDTO getEmployeeDataById(Integer id);
 }

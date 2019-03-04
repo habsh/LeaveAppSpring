@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.leave.dtos.EmployeeDetailsDTO;
 import com.leave.obj.Leave;
 import com.leave.obj.LeaveOne;
+import com.leave.obj.LeaveRequest;
 import com.leave.obj.LeaveErrors;
 import com.leave.services.EmployeeDataService;
 
@@ -33,30 +34,51 @@ public class ApplyLeaveService {
      * @param leave - the Leave object to be added to db
      * @return a list of errors, blank if valid
      */
-    public LeaveErrors dbLeave(Leave leave){
+    public LeaveErrors dbLeave(LeaveRequest leave){
     	
     	LeaveErrors errorList = new LeaveErrors();
 
     	//TODO if request fails
 
-		EmployeeDetailsDTO emp = (EmployeeDetailsDTO) employeeService.getEmployeeData(leave.getEmployee().getEmpId());
+		EmployeeDetailsDTO emp = (EmployeeDetailsDTO) employeeService.getEmployeeDataById(leave.getEmployee());
 		List<Leave> leaves = employeeService.getLeaveData(emp.getEmployeeId());
 		int emplDaysLeft = emp.getLeaveBalance();
+		Calendar cal = Calendar.getInstance();
+		
+		Leave toUpdate = new Leave();
+		toUpdate.setEndDate(leave.getEndDate());
+		toUpdate.setLeaveType(leave.getLeaveType());
+		toUpdate.setManagerComments("");
+		toUpdate.setNumDays(leave.getNumDays());
+		toUpdate.setReasons(leave.getReasons());
+		toUpdate.setStartDate(leave.getStartDate());
 		
 		//make sure employee has enough days
     	if (leave.getNumDays() <= emplDaysLeft){
     		//make sure no overlaps between any of the leaves
     		leaves.forEach((toCheck) -> {
-    			if (checkOverlap(toCheck,leave)){
+    			if (checkOverlap(toCheck,toUpdate)){
     				errorList.addError("Error: Leave overlaps with other leaves");
     				return;
     			}
 			});
     		if (errorList.errorCount() == 0){
-    		
+    			
+    			
+				
+    			com.leave.obj.Employee empl = new com.leave.obj.Employee();
+    			
+				empl.setEmpId(emp.getEmployeeId());
+				empl.setEmpName(emp.getEmployeeName());
+				empl.setLeaveBalance(emp.getLeaveBalance());
+				toUpdate.setAppliedOn(cal.getTime());
+    			toUpdate.setLeaveStatus("PENDING");
+    			
+				toUpdate.setEmployee(empl);
+	    		
          		//passed leave overlap validation!  time to add leave
         		//add the new leave to database of leaves
-    			employeeService.postAddLeave(leave);
+    			employeeService.postAddLeave(toUpdate);
     		}
     	}
     	else
@@ -78,7 +100,7 @@ public class ApplyLeaveService {
      * @param leave - the Leave object to be validated
      * @return a list of errors, blank if valid
      */
-    public LeaveErrors validateLeave(Leave leave){
+    public LeaveErrors validateLeave(LeaveRequest leave){
     	
     	LeaveErrors errorList = new LeaveErrors();
     	
@@ -108,10 +130,6 @@ public class ApplyLeaveService {
 	    		    	//adding 1 because leave requests are inclusive in days
 	    			if (numDays != diff){
 	    				errorList.addError("Error: Number of leave days is incorrect, should be : " + diff);
-	    			}
-	    			else{	//all validation logic succeeded
-	    				leave.setAppliedOn(cal.getTime());
-	    				leave.setLeaveStatus("PENDING");
 	    			}
     			}
     		}

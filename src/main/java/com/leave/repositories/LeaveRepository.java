@@ -13,7 +13,7 @@ import com.leave.obj.LeaveOne;
 @Repository
 public interface LeaveRepository extends JpaRepository<Leave, Integer>{
 	
-	  @Query(value = "select * from leave_history where t.emp_id = ?1" , nativeQuery = true)
+	  @Query(value = "select * from leave_history where emp_id = ?1" , nativeQuery = true)
 	  List<Leave> findLeaveByAttribute(int attribute);
 	  
 	  @Query(value = "select leaveid,applied_on,end_date,leave_status,leave_type,manager_comments,number_of_days,reasons,start_date,emp_id from leave_history where emp_id=?1" , nativeQuery = true)
