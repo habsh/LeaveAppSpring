@@ -34,7 +34,6 @@ public class EmployeeController {
 	@RequestMapping(value = "/addEmployee", method = RequestMethod.POST, headers = "Accept=application/json")
 	public void addCountry(@RequestBody Employee employee) {	
 		employeeService.addEmployee(employee);
-		
 	}
 
 	@RequestMapping(value = "/updateEmployee", method = RequestMethod.PUT, headers = "Accept=application/json")

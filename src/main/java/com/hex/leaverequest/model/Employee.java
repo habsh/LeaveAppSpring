@@ -26,7 +26,7 @@ public class Employee implements Serializable {
 	}
 	
 	public Employee(Integer empId, String empName, Integer empPhone, String empDept, String empMail, Date empDOJ,
-			String leaveBalance, Integer empManagerId) {
+			int leaveBalance, Integer empManagerId) {
 		super();
 		this.empId = empId;
 		this.empName = empName;
@@ -59,7 +59,7 @@ public class Employee implements Serializable {
 	Date empDOJ;	
 	
 	@Column(name = "leave_balance" )	
-	String leaveBalance;
+	Integer leaveBalance;
 	
 	@Column(name = "emp_mng_id" )	
 	Integer empManagerId;
@@ -112,11 +112,11 @@ public class Employee implements Serializable {
 		this.empDOJ = empDOJ;
 	}
 
-	public String getLeaveBalance() {
+	public int getLeaveBalance() {
 		return leaveBalance;
 	}
 
-	public void setLeaveBalance(String leaveBalance) {
+	public void setLeaveBalance(int leaveBalance) {
 		this.leaveBalance = leaveBalance;
 	}
 
