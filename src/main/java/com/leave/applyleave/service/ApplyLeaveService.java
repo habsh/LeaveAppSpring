@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.leave.dtos.EmployeeDetailsDTO;
 import com.leave.obj.Leave;
+import com.leave.obj.LeaveOne;
 import com.leave.obj.LeaveErrors;
 import com.leave.services.EmployeeDataService;
 
@@ -53,9 +54,7 @@ public class ApplyLeaveService {
     		if (errorList.errorCount() == 0){
     		
          		//passed leave overlap validation!  time to add leave
-        		//update employee # of requested days left
         		//add the new leave to database of leaves
-    			employeeService.postUpdateEmployee(emp.getEmployeeId(), emp.getLeaveBalance()- leave.getNumDays());
     			employeeService.postAddLeave(leave);
     		}
     	}
