@@ -55,9 +55,7 @@ public class ApplyLeaveService {
     		if (errorList.errorCount() == 0){
     		
          		//passed leave overlap validation!  time to add leave
-        		//update employee # of requested days left
         		//add the new leave to database of leaves
-    			employeeService.postUpdateEmployee(emp.getEmployeeId(), emp.getLeaveBalance()- leave.getNumDays());
     			employeeService.postAddLeave(leave);
     		}
     	}
