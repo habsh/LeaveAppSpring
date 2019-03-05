@@ -14,6 +14,7 @@ import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.leave.dtos.EmployeeContactDetailsDTO;
 import com.leave.dtos.EmployeeDetailsDTO;
 import com.leave.dtos.LeaveDetailsDTO;
 import com.leave.dtos.LeavesDetailsByEmployeeDTO;
@@ -183,6 +184,23 @@ public class LeaveDetailsService implements EmployeeDataService {
 		toReturn.setEmployeeId(employee.getEmpId());
 		toReturn.setEmployeeName(employee.getEmpName());
 		toReturn.setLeaveBalance(employee.getLeaveBalance());
+		return toReturn;
+	}
+	
+	public EmployeeDetailsDTO getEmployeeDataByIdFull(Integer id) {
+		Employee employee = Optional.ofNullable(employeeRepository.findOne(id))
+				.orElseThrow(()-> new UserNotFoundException("Employee not found")); 
+
+		EmployeeContactDetailsDTO toReturn = new EmployeeContactDetailsDTO();
+		toReturn.setEmployeeId(employee.getEmpId());
+		toReturn.setEmployeeName(employee.getEmpName());
+		toReturn.setLeaveBalance(employee.getLeaveBalance());
+		toReturn.setEmpDept(employee.getEmpDept());
+		toReturn.setEmpDoj(employee.getEmpDoj());
+		toReturn.setEmpMail(employee.getEmpMail());
+		toReturn.setEmpPhone(employee.getEmpPhone());
+		toReturn.setEmpMngId(employee.getEmpMngId());
+		
 		return toReturn;
 	}
 
