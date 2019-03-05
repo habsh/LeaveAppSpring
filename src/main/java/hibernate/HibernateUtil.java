@@ -1,4 +1,4 @@
-package leaveappspring;
+package hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
