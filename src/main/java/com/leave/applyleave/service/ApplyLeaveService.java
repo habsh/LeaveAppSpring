@@ -143,7 +143,7 @@ public class ApplyLeaveService {
     		
     		//validation of leave type
     		if (leaveType != null && !leaveType.isEmpty()){
-    			if (!leaveType.equals("Earned leave/Privileged leave"))
+    			if (!leaveType.equals("Earned leave")&&!leaveType.equals("Privileged leave"))
     				errorList.addError("Error: Leave type is invalid");
     		}
     		else{
