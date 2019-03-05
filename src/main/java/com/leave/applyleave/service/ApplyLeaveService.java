@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.leave.dtos.EmployeeDetailsDTO;
 import com.leave.obj.Leave;
@@ -14,6 +15,7 @@ import com.leave.obj.LeaveRequest;
 import com.leave.obj.LeaveErrors;
 import com.leave.services.EmployeeDataService;
 
+@CrossOrigin(origins = "*")
 @Service("applyLeaveService")
 public class ApplyLeaveService {
 	

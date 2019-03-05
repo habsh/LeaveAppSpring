@@ -64,13 +64,13 @@ public class ApplyLeaveServiceTest {
 		cal.set(2029,2,15);
 		Date date1 = cal.getTime();
 		
-		cal.set(2019,0,15);
+		cal.set(2019,1,15);
 		Date date2 = cal.getTime();
 		
 		cal.set(2029,2,20);
 		Date date3 = cal.getTime();
 		
-		cal.set(2019,1,15);
+		cal.set(2019,1,18);
 		Date date4 = cal.getTime();
 		
 		lr.setLeaveType("Earned leave/Privileged leave");
