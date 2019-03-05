@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.leave.dtos.LoginDTO;
+import com.leave.dtos.RegisterDTO;
 import com.leave.obj.Login;
-import com.leave.services.LoginService;;
+import com.leave.services.LoginService;
+import com.leave.services.RegisterService;;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -19,17 +21,32 @@ public class LoginController {
 
 	@Autowired
 	LoginService loginService;
+	@Autowired
+	RegisterService registerService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Accept=application/json")
 	public Login getEmployee(@RequestBody LoginDTO loginDTO) {
 
 		Optional<Login> user = loginService.loginEmployee(loginDTO.getUsername(), loginDTO.getPassword());
 
-		if (user != null && user.isPresent())
+		if (user!= null && user.isPresent())
 			return user.get();
 		else
 			return null;
 
 	}
 
+	@RequestMapping(value = "/register", method = RequestMethod.POST, headers = "Accept=application/json")
+	public Login getEmployee(@RequestBody RegisterDTO registerDTO) {
+
+		Optional<Login> user = registerService.registerEmployee(registerDTO.getEmpId(), registerDTO.getFirstName(),
+				registerDTO.getLastName(), registerDTO.getEmail(), registerDTO.getUsername(),
+				registerDTO.getPassword());
+
+		if (user.isPresent())
+			return user.get();
+		else
+			return null;
+
+	}
 }
