@@ -19,8 +19,11 @@ public class LoginController {
 
 	@Autowired
 	LoginService loginService;
+
 	@Autowired
 	RegisterService registerService;
+  
+	@CrossOrigin(origins = "http://localhost:4200")
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Accept=application/json")
 	public LoginDTO getEmployee(@RequestBody LoginDTO loginDTO) {
