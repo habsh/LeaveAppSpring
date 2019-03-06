@@ -1,7 +1,5 @@
 package com.leave.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,28 +23,19 @@ public class LoginController {
 	RegisterService registerService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Accept=application/json")
-	public Login getEmployee(@RequestBody LoginDTO loginDTO) {
+	public LoginDTO getEmployee(@RequestBody LoginDTO loginDTO) {
 
-		Optional<Login> user = loginService.loginEmployee(loginDTO.getUsername(), loginDTO.getPassword());
-
-		if (user!= null && user.isPresent())
-			return user.get();
-		else
-			return null;
-
+		LoginDTO user = loginService.loginEmployee(loginDTO);
+		return user;
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, headers = "Accept=application/json")
 	public Login getEmployee(@RequestBody RegisterDTO registerDTO) {
 
-		Optional<Login> user = registerService.registerEmployee(registerDTO.getEmpId(), registerDTO.getFirstName(),
+		return registerService.registerEmployee(registerDTO.getEmpId(), registerDTO.getFirstName(),
 				registerDTO.getLastName(), registerDTO.getEmail(), registerDTO.getUsername(),
 				registerDTO.getPassword());
 
-		if (user.isPresent())
-			return user.get();
-		else
-			return null;
 
 	}
 }

@@ -22,20 +22,17 @@ public class RegisterService {
 	}
 
 	@Transactional
-	public Optional<Login> registerEmployee(Integer empId, String firstName, String lastName, String email,
-			String username, String password) {
-
+	public Login registerEmployee(Integer empId, String firstName, String lastName, String email,
+		String username, String password) {
 		Login loginEntity = new Login();
 
-		//loginEntity.setEmpId(empId);
 		loginEntity.setFirstName(firstName);
 		loginEntity.setLastName(lastName);
 		loginEntity.setEmail(email);
 		loginEntity.setUsername(username);
 		loginEntity.setPassword(password);
-		Login savedUser = registerRepository.save(loginEntity);
+		return Optional.ofNullable(registerRepository.save(loginEntity)).orElseThrow(() -> new RuntimeException("Could not retrieve data from database"));
 
-		return Optional.of(savedUser);
 
 	}
 
