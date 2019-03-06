@@ -3,18 +3,15 @@ package com.leave;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.leave.applyleave.service.ApplyLeaveService;
-import com.leave.obj.Leave;
+import com.leave.dtos.LeaveDetailsDTO;
 import com.leave.obj.LeaveErrors;
 import com.leave.obj.LeaveRequest;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,16 +37,21 @@ public class MainController {
 
     	LeaveErrors errorList = applyLeaveService.validateLeave(leave);
     	if (errorList.errorCount() == 0)
-    		System.out.println("a");
     		errorList.addAllErrors(applyLeaveService.dbLeave(leave));
 		    	
     	return errorList;
     }
+    @RequestMapping("/")
+	public ResponseEntity homeStatus(){
+		//System.out.println("response"+employeeDataService.getLeaveData(id));
+		return new ResponseEntity("Greetings from Spring Boot!",
+				HttpStatus.OK);
+	}
+    @RequestMapping("/add/{num1}/{num2}")
+	public ResponseEntity addStatus(@PathVariable Integer num1,@PathVariable Integer num2){
+		//System.out.println("response"+employeeDataService.getLeaveData(id));
+		return new ResponseEntity(num1+num2,
+				HttpStatus.OK);
+	}
     
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        sdf.setLenient(true);
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-    }
 }

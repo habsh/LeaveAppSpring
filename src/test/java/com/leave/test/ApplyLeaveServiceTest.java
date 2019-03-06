@@ -8,39 +8,49 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.leave.MainController;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leave.applyleave.service.ApplyLeaveService;
 import com.leave.obj.Leave;
 import com.leave.obj.LeaveErrors;
 import com.leave.obj.LeaveRequest;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ApplyLeaveServiceTest {
 
-	private MainController controller; 
 	@Autowired
-	ApplyLeaveService applyLeaveService;
+    private MockMvc mvc;
+	
+	@Autowired
+	private ApplyLeaveService applyLeaveService;
+	
+	private LeaveErrors response;
+	private LeaveRequest lr;
 	
 	@Before
 	public void instantiateController(){
-		controller = new MainController();
-	}
-	
-	@Test
-	public void testLeaveNull() {
-		LeaveErrors response = controller.applyLeave(null);
-		assertEquals("Null Leave Check",1,response.getErrors().size());
+		lr = new LeaveRequest();
+		response = new LeaveErrors();
 	}
 
 	@Test
 	public void testLeaveEmpty() {
 		
-		//date fields, and leave type empty
 		System.out.println("in Leave test - LeaveEmpty");
-		LeaveErrors response = controller.applyLeave(new LeaveRequest());
+		//date fields, and leave type empty
+		doNormalRequest();
+		
 		assertEquals("Leave Validation",2,response.errorCount());
 		response.getErrors().forEach(System.out::println);
 	}
@@ -49,43 +59,36 @@ public class ApplyLeaveServiceTest {
 	public void testLeaveInvalidDates() {
 		
 		System.out.println("in Leave test - InvalidDates");
-		
-		//date fields, and leave type empty
+	
 		Calendar cal = Calendar.getInstance();
-		cal.set(2019,2,15);
+		cal.set(2022,2,15);
 		Date date1 = cal.getTime();
 		
-		cal.set(2019,0,15);
+		cal.set(2019,1,15);
 		Date date2 = cal.getTime();
 		
-		cal.set(2019,2,20);
+		cal.set(2022,2,20);
 		Date date3 = cal.getTime();
 		
-		cal.set(2019,1,15);
+		cal.set(2019,1,18);
 		Date date4 = cal.getTime();
 		
-		LeaveRequest testing = new LeaveRequest();
-		testing.setLeaveType("Earned Leave");
-		testing.setStartDate(date2);
-		testing.setEndDate(date4);
+		lr.setLeaveType("Earned leave/Privileged leave");
+		lr.setStartDate(date2);
+		lr.setEndDate(date4);
 		
-		LeaveErrors response = controller.applyLeave(testing);
+		doNormalRequest();
 		assertEquals("Dates must be after today",2,response.errorCount());
 		response.getErrors().forEach(System.out::println);
 		
-		testing.setStartDate(date1);
-		response = controller.applyLeave(testing);
+		lr.setStartDate(date1);
+		doNormalRequest();
 		assertEquals("Start must be before end date",2,response.errorCount());
 		response.getErrors().forEach(System.out::println);
 		
-		testing.setEndDate(date3);
-		response = controller.applyLeave(testing);
+		lr.setEndDate(date3);
+		doNormalRequest();
 		assertEquals("Incorrect num of days",1,response.errorCount());
-		response.getErrors().forEach(System.out::println);
-		
-		testing.setNumDays(6);
-		response = controller.applyLeave(testing);
-		assertEquals("Successful validation",0,response.errorCount());
 		response.getErrors().forEach(System.out::println);
 	}
 	
@@ -94,7 +97,6 @@ public class ApplyLeaveServiceTest {
 		
 		System.out.println("in Leave test - DateOverlap");
 		
-		//date fields, and leave type empty
 		Calendar cal = Calendar.getInstance();
 		cal.set(2019,2,15);
 		Date date1 = cal.getTime();
@@ -138,5 +140,26 @@ public class ApplyLeaveServiceTest {
 		assertFalse("Dates do not overlap swap",applyLeaveService.checkOverlap(testing2,testing1));
 		
 	}
+	
+	private void doNormalRequest(){
+		try {
+			response = new ObjectMapper().readValue( mvc.perform(MockMvcRequestBuilders.post("/applyLeave")
+			  .content(asJsonString(lr))
+			  .contentType(MediaType.APPLICATION_JSON)
+			  .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse().getContentAsString(), LeaveErrors.class );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static String asJsonString(final Object obj) {
+	    try {
+	        final ObjectMapper mapper = new ObjectMapper();
+	        final String jsonContent = mapper.writeValueAsString(obj);
+	        return jsonContent;
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
+	}  
 	
 }

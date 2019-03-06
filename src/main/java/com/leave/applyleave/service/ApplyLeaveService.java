@@ -7,14 +7,15 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.leave.dtos.EmployeeDetailsDTO;
 import com.leave.obj.Leave;
-import com.leave.obj.LeaveOne;
 import com.leave.obj.LeaveRequest;
 import com.leave.obj.LeaveErrors;
 import com.leave.services.EmployeeDataService;
 
+@CrossOrigin(origins = "*")
 @Service("applyLeaveService")
 public class ApplyLeaveService {
 	
@@ -51,15 +52,21 @@ public class ApplyLeaveService {
 		toUpdate.setNumDays(leave.getNumDays());
 		toUpdate.setReasons(leave.getReasons());
 		toUpdate.setStartDate(leave.getStartDate());
-		
+		System.out.println("checking leave length " + leaves.size());
 		//make sure employee has enough days
     	if (leave.getNumDays() <= emplDaysLeft){
     		//make sure no overlaps between any of the leaves
     		leaves.forEach((toCheck) -> {
+    			
+    			System.out.println(((Leave) toCheck).getStartDate());
+    			System.out.println(((Leave) toCheck).getEndDate());
+    			System.out.println(((Leave) toUpdate).getStartDate());
+    			System.out.println(((Leave) toUpdate).getEndDate());
     			if (checkOverlap(toCheck,toUpdate)){
     				errorList.addError("Error: Leave overlaps with other leaves");
     				return;
     			}
+    			
 			});
     		if (errorList.errorCount() == 0){
     			
@@ -138,8 +145,8 @@ public class ApplyLeaveService {
     		
     		//validation of leave type
     		if (leaveType != null && !leaveType.isEmpty()){
-    			if (!leaveType.equals("Earned Leave"))
-    				errorList.addError("Error: Leave reason is invalid");
+    			if (!leaveType.equals("Earned leave/Privileged leave"))
+    				errorList.addError("Error: Leave type is invalid");
     		}
     		else{
     			errorList.addError("Error: Leave type is empty");
@@ -173,6 +180,6 @@ public class ApplyLeaveService {
     	Date lateStart = (start1.compareTo(start2) > 0) ? start1 : start2;
     	Date earlyEnd = (end1.compareTo(end2) < 0) ? end1 : end2;
 
-    	return lateStart.compareTo(earlyEnd) < 0;
+    	return lateStart.compareTo(earlyEnd) <= 0;
     }
 }
