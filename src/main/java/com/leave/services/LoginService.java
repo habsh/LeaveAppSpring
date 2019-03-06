@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.leave.repositories.LoginRepository;
-
+import com.leave.dtos.LoginDTO;
+import com.leave.exceptions.UserNotFoundException;
 import com.leave.obj.Login;
 
 @Service("loginService")
@@ -22,14 +23,17 @@ public class LoginService {
 	}
 
 	@Transactional
-	public Optional<Login> loginEmployee(String username, String password) {
+	public LoginDTO loginEmployee(LoginDTO user) {
 
-		Optional<Login> login = Optional.ofNullable(loginRepository.findByUsername(username));
+		Optional<Login> login = Optional.ofNullable(loginRepository.findByUsername(user.getUsername()));
 
-		if (login.isPresent())
-			return password.equals(login.get().getPassword()) ? login : null;
+		if (login.isPresent()){
+			user.setUser(user.getPassword().equals(login.get().getPassword()));
+			user.setEmpId(login.get().getEmpId());
+			return user;
+		}
 		else
-			return null;
+			throw new UserNotFoundException("User not found");
 	}
 
 }
