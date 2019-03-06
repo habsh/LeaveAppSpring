@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.leave.controller.LeaveAcceptanceController;
 import com.leave.dtos.EmployeeDetailsDTO;
+import com.leave.dtos.LeaveDetailsDTO;
 import com.leave.obj.Leave;
 import com.leave.obj.LeaveRequest;
 import com.leave.obj.LeaveErrors;
@@ -39,6 +41,7 @@ public class ApplyLeaveService {
     	LeaveErrors errorList = new LeaveErrors();
 
     	//TODO if request fails
+    	
 
 		EmployeeDetailsDTO emp = (EmployeeDetailsDTO) employeeService.getEmployeeDataById(leave.getEmployee());
 		List<Leave> leaves = employeeService.getLeaveData(emp.getEmployeeId());
@@ -53,19 +56,38 @@ public class ApplyLeaveService {
 		toUpdate.setReasons(leave.getReasons());
 		toUpdate.setStartDate(leave.getStartDate());
 		System.out.println("checking leave length " + leaves.size());
+		
+		if(leave.getLeave()>0){
+    		//this is updating an EXISTING Leave
+			System.out.println("existing leaveId"+leave.getLeave());
+			//get days from EXISTING Leave
+			LeaveDetailsDTO existingLeave = (LeaveDetailsDTO) employeeService.getEmployeeData(leave.getLeave());
+			System.out.println("existing days "+existingLeave.getDays()+" new days "+leave.getNumDays());
+			//adjust days left so that the Existing leave (which will be edited) is not counted
+			emplDaysLeft = emplDaysLeft - existingLeave.getDays();
+    	}else{
+    		//this is creating a NEW Leave
+    	}
+		//remaining tasks: dont include EXISTING Leave in Overlap, do an update and NOT an insert
+		
+		
 		//make sure employee has enough days
     	if (leave.getNumDays() <= emplDaysLeft){
     		//make sure no overlaps between any of the leaves
     		leaves.forEach((toCheck) -> {
-    			
-    			System.out.println(((Leave) toCheck).getStartDate());
-    			System.out.println(((Leave) toCheck).getEndDate());
-    			System.out.println(((Leave) toUpdate).getStartDate());
-    			System.out.println(((Leave) toUpdate).getEndDate());
-    			if (checkOverlap(toCheck,toUpdate)){
-    				errorList.addError("Error: Leave overlaps with other leaves");
-    				return;
+    			//if we are updating a leave, DO NOT check the EXISTING Leave
+    			if(!(leave.getLeave()>0 && toCheck.getLeaveID()==leave.getLeave())){
+    				System.out.println("checking leave " +toCheck.getLeaveID());
+	    			System.out.println(((Leave) toCheck).getStartDate());
+	    			System.out.println(((Leave) toCheck).getEndDate());
+	    			System.out.println(((Leave) toUpdate).getStartDate());
+	    			System.out.println(((Leave) toUpdate).getEndDate());
+	    			if (checkOverlap(toCheck,toUpdate)){
+	    				errorList.addError("Error: Leave overlaps with other leaves");
+	    				return;
+	    			}
     			}
+    			
     			
 			});
     		if (errorList.errorCount() == 0){
