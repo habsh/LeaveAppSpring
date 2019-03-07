@@ -1,5 +1,6 @@
 package com.leave.services;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -59,6 +60,8 @@ public class LeaveDetailsService implements EmployeeDataService {
 		leaveDetailsDTO.setEmployeeId(employee.getEmpId());
 		leaveDetailsDTO.setEmployeeName(Optional.ofNullable(employee.getEmpName()).orElse(" "));
 		leaveDetailsDTO.setLeaveBalance(Optional.ofNullable(employee.getLeaveBalance()).orElse(0));
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		leaveDetailsDTO.setAppliedOn(df.format(leave.getAppliedOn()));
 
 		return leaveDetailsDTO;
 	}

@@ -10,12 +10,13 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	String status;
 	String managerCommnets;
 	String acceptance;
+	String appliedOn;
+	
+	
 	
 	public int getLeaveId() {
 		return leaveId;
 	}
-
-
 	public void setLeaveId(int leaveId) {
 		this.leaveId = leaveId;
 	}
@@ -24,9 +25,6 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public String getEmployeeName() {
 		return employeeName;
 	}
-
-
-
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
 	}
@@ -36,19 +34,15 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public String getAcceptance() {
 		return acceptance;
 	}
-
-
 	public void setAcceptance(String acceptance) {
 		this.acceptance = acceptance;
 	}
 
 
+	
 	public String getStartDate() {
 		return startDate;
 	}
-
-
-
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
@@ -58,21 +52,24 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public String getEndDate() {
 		return endDate;
 	}
-
-
-
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 
 
+	
+	public String getAppliedOn() {
+		return appliedOn;
+	}
+	public void setAppliedOn(String appliedOn) {
+		this.appliedOn = appliedOn;
+	}
+
+	
 
 	public int getDays() {
 		return days;
 	}
-
-
-
 	public void setDays(int days) {
 		this.days = days;
 	}
@@ -82,9 +79,6 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public String getLeaveType() {
 		return leaveType;
 	}
-
-
-
 	public void setLeaveType(String leaveType) {
 		this.leaveType = leaveType;
 	}
@@ -94,9 +88,6 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public String getReason() {
 		return reason;
 	}
-
-
-
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
@@ -106,9 +97,6 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public String getStatus() {
 		return status;
 	}
-
-
-
 	public void setStatus(String status) {
 		this.status = status;
 	}
@@ -118,9 +106,6 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public String getManagerCommnets() {
 		return managerCommnets;
 	}
-
-
-
 	public void setManagerCommnets(String managerCommnets) {
 		this.managerCommnets = managerCommnets;
 	}
@@ -132,6 +117,7 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 		int result = super.hashCode();
 		result = prime * result + days;
 		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
+		result = prime * result + ((appliedOn == null) ? 0 : appliedOn.hashCode());
 		result = prime * result + leaveId;
 		result = prime * result + ((leaveType == null) ? 0 : leaveType.hashCode());
 		result = prime * result + ((managerCommnets == null) ? 0 : managerCommnets.hashCode());
@@ -157,6 +143,11 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 			if (other.endDate != null)
 				return false;
 		} else if (!endDate.equals(other.endDate))
+			return false;
+		if (appliedOn == null) {
+			if (other.appliedOn != null)
+				return false;
+		} else if (!appliedOn.equals(other.appliedOn))
 			return false;
 		if (leaveId != other.leaveId)
 			return false;
@@ -190,7 +181,7 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 
 	@Override
 	public String toString() {
-		return "LeaveDetailsDTO [leaveId=" + leaveId + ", startDate=" + startDate + ", endDate=" + endDate + ", days="
+		return "LeaveDetailsDTO [leaveId=" + leaveId+ ", startDate=" + startDate + ", endDate=" + endDate + ", days="
 				+ days + ", leaveType=" + leaveType + ", reason=" + reason + ", status=" + status + ", managerCommnets="
 				+ managerCommnets + ", employeeId=" + getEmployeeId() + ", employeeName=" + employeeName + ", leaveBalance="
 				+ getLeaveBalance() + "]";
