@@ -17,6 +17,14 @@ public class LeaveRequest {
 	public void setEmployee(int employee) {
 		this.employee = employee;
 	}
+	
+	private int leave;
+	public int getLeave() {
+		return leave;
+	}
+	public void setLeave(int leave) {
+		this.leave = leave;
+	}
 
 	@JsonDeserialize(using=DateDeserialize.class)
 	private Date startDate;
@@ -34,6 +42,7 @@ public class LeaveRequest {
 	public LeaveRequest(int leaveID, int employee, Date startDate, Date endDate, int numDays, String leaveType,
 			String reasons) {
 		super();
+		this.leave = leaveID;
 		this.employee = employee;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -41,6 +50,7 @@ public class LeaveRequest {
 		this.leaveType = leaveType;
 		this.reasons = reasons;
 	}
+	
 
 	public Date getStartDate() {
 		return startDate;
@@ -77,6 +87,7 @@ public class LeaveRequest {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + employee;
+		result = prime * result + leave;
 		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
 		result = prime * result + ((leaveType == null) ? 0 : leaveType.hashCode());
 		result = prime * result + numDays;
@@ -95,6 +106,8 @@ public class LeaveRequest {
 			return false;
 		LeaveRequest other = (LeaveRequest) obj;
 		if (employee != other.employee)
+			return false;
+		if (leave != other.leave)
 			return false;
 		if (endDate == null) {
 			if (other.endDate != null)
