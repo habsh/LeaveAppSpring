@@ -211,11 +211,13 @@ public class LeaveDetailsService implements EmployeeDataService {
 				.orElseThrow(()-> new LeaveDetailsNotFoundException("Not leave details Available")); 	
 
 		List<LeavesDetailsByEmployeeDTO> pendingLeavesDTO = new ArrayList<>();
+		
+		
 
 		Map<Employee, List<Leave>> pendingLeavesByEmployee = leaves.stream()
 				.filter(leave -> {
 					if(!Optional.ofNullable(leave.getEmployee()).isPresent())
-						new UserNotFoundException("Employee details not available");
+						throw new UserNotFoundException("Employee details not available");
 					return true;
 				}
 						)
