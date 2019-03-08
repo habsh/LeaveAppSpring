@@ -86,7 +86,7 @@ public class LeaveDetailsService implements EmployeeDataService {
 			throw new IncorrectLeaveBalanceException("Not enough days");
 
 		dbLeave.setLeaveStatus(leave.getStatus());
-		dbLeave.setManagerComments(leave.getManagerCommnets());
+		dbLeave.setManagerComments(leave.getManagerComments());
 		employee.setLeaveBalance(leave.getLeaveBalance());
 
 		leaveRepository.save(dbLeave);
@@ -214,11 +214,13 @@ public class LeaveDetailsService implements EmployeeDataService {
 				.orElseThrow(()-> new LeaveDetailsNotFoundException("Not leave details Available")); 	
 
 		List<LeavesDetailsByEmployeeDTO> pendingLeavesDTO = new ArrayList<>();
+		
+		
 
 		Map<Employee, List<Leave>> pendingLeavesByEmployee = leaves.stream()
 				.filter(leave -> {
 					if(!Optional.ofNullable(leave.getEmployee()).isPresent())
-						new UserNotFoundException("Employee details not available");
+						throw new UserNotFoundException("Employee details not available");
 					return true;
 				}
 						)
@@ -277,7 +279,7 @@ public class LeaveDetailsService implements EmployeeDataService {
 			leaveDetailsDTO.setStartDate(" ");
 
 		leaveDetailsDTO.setStatus(Optional.ofNullable(leave.getLeaveStatus()).orElse(" "));
-		leaveDetailsDTO.setManagerCommnets(Optional.ofNullable(leave.getManagerComments()).orElse(" "));
+		leaveDetailsDTO.setManagerComments(Optional.ofNullable(leave.getManagerComments()).orElse(" "));
 
 		return leaveDetailsDTO;	
 

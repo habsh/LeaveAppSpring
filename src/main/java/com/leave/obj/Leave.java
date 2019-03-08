@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name="leave_history",
@@ -44,6 +45,7 @@ public class Leave {
 	private String reasons;
 	
 	@Column(name = "manager_comments")
+	@Type(type="text")
 	private String managerComments;
 	
 	@Column(name = "applied_on")

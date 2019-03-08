@@ -8,7 +8,7 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	String leaveType;
 	String reason;
 	String status;
-	String managerCommnets;
+	String managerComments;
 	String acceptance;
 	String appliedOn;
 	
@@ -101,15 +101,13 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 		this.status = status;
 	}
 
-
-
-	public String getManagerCommnets() {
-		return managerCommnets;
-	}
-	public void setManagerCommnets(String managerCommnets) {
-		this.managerCommnets = managerCommnets;
+	public String getManagerComments() {
+		return managerComments;
 	}
 
+	public void setManagerComments(String managerComments) {
+		this.managerComments = managerComments;
+	}
 
 	@Override
 	public int hashCode() {
@@ -120,7 +118,7 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 		result = prime * result + ((appliedOn == null) ? 0 : appliedOn.hashCode());
 		result = prime * result + leaveId;
 		result = prime * result + ((leaveType == null) ? 0 : leaveType.hashCode());
-		result = prime * result + ((managerCommnets == null) ? 0 : managerCommnets.hashCode());
+		result = prime * result + ((managerComments == null) ? 0 : managerComments.hashCode());
 		result = prime * result + ((reason == null) ? 0 : reason.hashCode());
 		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
@@ -156,10 +154,10 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 				return false;
 		} else if (!leaveType.equals(other.leaveType))
 			return false;
-		if (managerCommnets == null) {
-			if (other.managerCommnets != null)
+		if (managerComments == null) {
+			if (other.managerComments != null)
 				return false;
-		} else if (!managerCommnets.equals(other.managerCommnets))
+		} else if (!managerComments.equals(other.managerComments))
 			return false;
 		if (reason == null) {
 			if (other.reason != null)
@@ -183,7 +181,7 @@ public class LeaveDetailsDTO extends EmployeeDetailsDTO{
 	public String toString() {
 		return "LeaveDetailsDTO [leaveId=" + leaveId+ ", startDate=" + startDate + ", endDate=" + endDate + ", days="
 				+ days + ", leaveType=" + leaveType + ", reason=" + reason + ", status=" + status + ", managerCommnets="
-				+ managerCommnets + ", employeeId=" + getEmployeeId() + ", employeeName=" + employeeName + ", leaveBalance="
+				+ managerComments + ", employeeId=" + getEmployeeId() + ", employeeName=" + employeeName + ", leaveBalance="
 				+ getLeaveBalance() + "]";
 	}
 	
