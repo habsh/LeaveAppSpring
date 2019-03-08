@@ -1,15 +1,20 @@
 package com.leave.applyleave.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.leave.controller.LeaveAcceptanceController;
 import com.leave.dtos.EmployeeDetailsDTO;
+import com.leave.dtos.LeaveDetailsDTO;
 import com.leave.obj.Leave;
 import com.leave.obj.LeaveRequest;
 import com.leave.obj.LeaveErrors;
@@ -37,8 +42,9 @@ public class ApplyLeaveService {
     public LeaveErrors dbLeave(LeaveRequest leave){
     	
     	LeaveErrors errorList = new LeaveErrors();
-
+    	LeaveDetailsDTO existingLeave = null;
     	//TODO if request fails
+    	
 
 		EmployeeDetailsDTO emp = (EmployeeDetailsDTO) employeeService.getEmployeeDataById(leave.getEmployee());
 		List<Leave> leaves = employeeService.getLeaveData(emp.getEmployeeId());
@@ -53,19 +59,38 @@ public class ApplyLeaveService {
 		toUpdate.setReasons(leave.getReasons());
 		toUpdate.setStartDate(leave.getStartDate());
 		System.out.println("checking leave length " + leaves.size());
+		
+		if(leave.getLeave()>0){
+    		//this is updating an EXISTING Leave
+			System.out.println("existing leaveId"+leave.getLeave());
+			//get days from EXISTING Leave
+			existingLeave = (LeaveDetailsDTO) employeeService.getEmployeeData(leave.getLeave());
+			System.out.println("existing days "+existingLeave.getDays()+" new days "+leave.getNumDays());
+			//adjust days left so that the Existing leave (which will be edited) is not counted
+			emplDaysLeft = emplDaysLeft - existingLeave.getDays();
+    	}else{
+    		//this is creating a NEW Leave
+    	}
+		//remaining tasks: dont include EXISTING Leave in Overlap, do an update and NOT an insert
+		
+		
 		//make sure employee has enough days
     	if (leave.getNumDays() <= emplDaysLeft){
     		//make sure no overlaps between any of the leaves
     		leaves.forEach((toCheck) -> {
-    			
-    			System.out.println(((Leave) toCheck).getStartDate());
-    			System.out.println(((Leave) toCheck).getEndDate());
-    			System.out.println(((Leave) toUpdate).getStartDate());
-    			System.out.println(((Leave) toUpdate).getEndDate());
-    			if (checkOverlap(toCheck,toUpdate)){
-    				errorList.addError("Error: Leave overlaps with other leaves");
-    				return;
+    			//if we are updating a leave, DO NOT check the EXISTING Leave
+    			if(!(leave.getLeave()>0 && toCheck.getLeaveID()==leave.getLeave())){
+    				System.out.println("checking leave " +toCheck.getLeaveID());
+	    			System.out.println(((Leave) toCheck).getStartDate());
+	    			System.out.println(((Leave) toCheck).getEndDate());
+	    			System.out.println(((Leave) toUpdate).getStartDate());
+	    			System.out.println(((Leave) toUpdate).getEndDate());
+	    			if (checkOverlap(toCheck,toUpdate)){
+	    				errorList.addError("Error: Leave overlaps with other leaves");
+	    				return;
+	    			}
     			}
+    			
     			
 			});
     		if (errorList.errorCount() == 0){
@@ -77,11 +102,23 @@ public class ApplyLeaveService {
 				empl.setEmpId(emp.getEmployeeId());
 				empl.setEmpName(emp.getEmployeeName());
 				empl.setLeaveBalance(emp.getLeaveBalance());
-				toUpdate.setAppliedOn(cal.getTime());
-    			toUpdate.setLeaveStatus("PENDING");
-    			
 				toUpdate.setEmployee(empl);
-	    		
+				if(leave.getLeave()>0){
+					//get applied on, leave status, and set leaveID of EXISTING Leave
+					toUpdate.setLeaveID(existingLeave.getLeaveId());
+					toUpdate.setLeaveStatus(existingLeave.getStatus());
+					try{
+						DateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+						Date date = format.parse(existingLeave.getAppliedOn());
+						toUpdate.setAppliedOn(date);
+					}catch(Exception e){
+						
+					}
+				}else{
+					//new entry
+					toUpdate.setAppliedOn(cal.getTime());
+					toUpdate.setLeaveStatus("PENDING");
+				}
          		//passed leave overlap validation!  time to add leave
         		//add the new leave to database of leaves
     			employeeService.postAddLeave(toUpdate);
