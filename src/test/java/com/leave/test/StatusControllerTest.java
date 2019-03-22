@@ -18,21 +18,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class HelloControllerTest {
+public class StatusControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @Test
     public void getHello() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("Greetings from Spring Boot!")));
+        mvc.perform(MockMvcRequestBuilders.get("/leave/status/1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
-    @Test
-    public void testAddition() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/add/12/22").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("34")));
-    }
+    
 }
