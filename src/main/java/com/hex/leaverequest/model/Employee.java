@@ -1,6 +1,7 @@
 package com.hex.leaverequest.model;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -25,7 +26,7 @@ public class Employee implements Serializable {
 		super();
 	}
 	
-	public Employee(Integer empId, String empName, Integer empPhone, String empDept, String empMail, Date empDOJ,
+	public Employee(Integer empId, String empName, BigInteger empPhone, String empDept, String empMail, Date empDOJ,
 			String leaveBalance, Integer empManagerId) {
 		super();
 		this.empId = empId;
@@ -47,7 +48,7 @@ public class Employee implements Serializable {
 	String empName;
 	
 	@Column(name = "emp_phone" )
-	Integer empPhone;
+	BigInteger empPhone;
 	
 	@Column(name = "emp_dept" )	
 	String empDept;
@@ -80,13 +81,7 @@ public class Employee implements Serializable {
 		this.empName = empName;
 	}
 
-	public Integer getEmpPhone() {
-		return empPhone;
-	}
-
-	public void setEmpPhone(Integer empPhone) {
-		this.empPhone = empPhone;
-	}
+	
 
 	public String getEmpDept() {
 		return empDept;
@@ -126,5 +121,13 @@ public class Employee implements Serializable {
 
 	public void setEmpManagerId(Integer empManagerId) {
 		this.empManagerId = empManagerId;
+	}
+
+	public BigInteger getEmpPhone() {
+		return empPhone;
+	}
+
+	public void setEmpPhone(BigInteger empPhone) {
+		this.empPhone = empPhone;
 	}
 }
